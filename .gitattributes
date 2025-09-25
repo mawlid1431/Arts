@@ -1,0 +1,115 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Text files
+*.txt text
+*.md text
+*.json text
+*.js text
+*.jsx text
+*.ts text
+*.tsx text
+*.css text
+*.scss text
+*.sass text
+*.html text
+*.xml text
+*.yml text
+*.yaml text
+*.toml text
+*.ini text
+*.cfg text
+*.conf text
+*.sh text eol=lf
+*.bat text eol=crlf
+
+# Documentation
+*.markdown text
+*.mdown text
+*.mkd text
+*.livemd text
+
+# Templates
+*.mustache text
+*.hbs text
+*.handlebars text
+*.hbt text
+
+# Linters and configs
+.csslintrc text
+.eslintrc text
+.htmlhintrc text
+.jscsrc text
+.jshintrc text
+.stylelintrc text
+browserslist text
+.babelrc text
+.editorconfig text
+
+# Configs
+*.cnf text
+*.cfg text
+*.conf text
+*.config text
+.gitattributes text
+.gitconfig text
+.htaccess text
+*.npmignore text
+
+# Heroku
+Procfile text
+.slugignore text
+
+# Documentation
+*.rtf diff=astextplain
+*.RTF diff=astextplain
+
+# Graphics
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.svg text
+
+# Audio
+*.mp3 binary
+*.ogg binary
+*.wav binary
+
+# Video
+*.mp4 binary
+*.mov binary
+*.avi binary
+
+# Archives
+*.zip binary
+*.gz binary
+*.tar binary
+*.7z binary
+
+# Fonts
+*.ttf binary
+*.eot binary
+*.otf binary
+*.woff binary
+*.woff2 binary
+
+# Executables
+*.exe binary
+*.pyc binary
+
+# Documents
+*.pdf binary
+*.doc binary
+*.docx binary
+*.xls binary
+*.xlsx binary
+*.ppt binary
+*.pptx binary
+
+# RC files (like .babelrc or .eslintrc)
+*rc text
+
+# Ignore files (like .gitignore or .npmignore)
+*ignore text
