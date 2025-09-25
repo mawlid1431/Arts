@@ -50,7 +50,7 @@ const mockProducts = [
     price: 349.00,
     original_price: 449.00,
     discount: 22,
-    image: 'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=500&h=500&fit=crop',
+    image: '/simple_woman.jpg',
     category: 'Fine Art Painting',
     in_stock: true,
     created_at: new Date().toISOString(),

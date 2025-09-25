@@ -140,13 +140,12 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
                 </p>
               </div>
             </div>
-            <div className="aspect-square bg-gradient-to-br from-primary/20 to-primary/5 rounded-2xl flex items-center justify-center">
-              <div className="text-center">
-                <Palette className="h-20 w-20 text-primary mx-auto mb-4" />
-                <p className="text-lg font-semibold text-primary">
-                  Making Art Accessible Since 2016
-                </p>
-              </div>
+            <div className="aspect-square bg-gradient-to-br from-primary/20 to-primary/5 rounded-2xl overflow-hidden">
+              <img 
+                src="/about_img.jpg" 
+                alt="Vibrant colorful portrait artwork showcasing geometric patterns and artistic expression" 
+                className="w-full h-full object-cover"
+              />
             </div>
           </div>
         </motion.section>

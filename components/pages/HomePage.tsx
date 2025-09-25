@@ -317,8 +317,8 @@ export function HomePage({ onNavigate }: HomePageProps) {
                   transition={{ duration: 0.4 }}
                 >
                   <ImageWithFallback
-                    src="https://images.unsplash.com/photo-1681239064172-447e0246b11c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjYW52YXMlMjBhcnR3b3JrJTIwYWJzdHJhY3QlMjBwYWludGluZ3xlbnwxfHx8fDE3NTg3MzYyMDF8MA&ixlib=rb-4.1.0&q=80&w=1080"
-                    alt="Abstract canvas artwork"
+                    src="/main_2.jpg"
+                    alt="Vibrant portrait with flowing colorful patterns - Make Your Home Amazing with Art"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -327,8 +327,8 @@ export function HomePage({ onNavigate }: HomePageProps) {
                     initial={{ y: 20 }}
                     whileHover={{ y: 0 }}
                   >
-                    <div className="font-semibold text-lg">Abstract Expression</div>
-                    <div className="text-sm opacity-90">Canvas Painting • $299</div>
+                    <div className="font-semibold text-lg">Colorful Portrait Art</div>
+                    <div className="text-sm opacity-90">Canvas Painting • $399</div>
                   </motion.div>
                 </motion.div>
 
@@ -342,8 +342,8 @@ export function HomePage({ onNavigate }: HomePageProps) {
                   style={{ y: useTransform(scrollY, [0, 400], [0, -30]) }}
                 >
                   <ImageWithFallback
-                    src="https://images.unsplash.com/photo-1730528793550-67eb0bd8806d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxnYWxsZXJ5JTIwd2FsbCUyMGFydCUyMGZyYW1lcyUyMGhvbWV8ZW58MXx8fHwxNzU4NzM2MjA1fDA&ixlib=rb-4.1.0&q=80&w=1080"
-                    alt="Gallery wall art"
+                    src="/main_1.jpg"
+                    alt="Abstract blue and yellow contemporary artwork"
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
@@ -358,8 +358,8 @@ export function HomePage({ onNavigate }: HomePageProps) {
                   style={{ y: useTransform(scrollY, [0, 400], [0, 30]) }}
                 >
                   <ImageWithFallback
-                    src="https://images.unsplash.com/photo-1758448500596-ce0e0239f1be?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxlbGVnYW50JTIwaW50ZXJpb3IlMjBkZXNpZ24lMjBhcnR3b3JrfGVufDF8fHx8MTc1ODczNjIwOHww&ixlib=rb-4.1.0&q=80&w=1080"
-                    alt="Elegant interior artwork"
+                    src="/done_arrow_bg.jpg"
+                    alt="Serene misty landscape path artwork"
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
