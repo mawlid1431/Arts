@@ -7,7 +7,7 @@ import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Separator } from '../ui/separator';
 import { useCartContext } from '../../contexts/CartContext';
-import { Customer } from '../../types';
+import { CheckoutFormData } from '../../types';
 
 interface CheckoutPageProps {
   onNavigate: (page: string) => void;
@@ -16,7 +16,7 @@ interface CheckoutPageProps {
 export function CheckoutPage({ onNavigate }: CheckoutPageProps) {
   const { cart, getCartTotal, getCartCount, clearCart } = useCartContext();
   const [isProcessing, setIsProcessing] = useState(false);
-  const [formData, setFormData] = useState<Customer>({
+  const [formData, setFormData] = useState<CheckoutFormData>({
     name: '',
     email: '',
     phone: '',
@@ -108,18 +108,48 @@ export function CheckoutPage({ onNavigate }: CheckoutPageProps) {
     setIsProcessing(true);
 
     try {
-      // Simulate order processing
-      await new Promise(resolve => setTimeout(resolve, 2000));
-
-      const orderId = `ORD-${Date.now()}`;
-      
-      // Create order object
-      const order = {
-        orderId,
-        status: 'reviewing' as const,
+      // Prepare order data for API
+      const orderData = {
+        customerName: formData.name,
+        customerEmail: formData.email,
+        customerPhone: formData.phone,
+        shippingAddress: `${formData.address.line1}, ${formData.address.line2 ? formData.address.line2 + ', ' : ''}${formData.address.city}, ${formData.address.postcode}, ${formData.address.country}`,
+        paymentMethod: 'pending',
         items: cart.map(item => ({
           productId: item.productId,
-          title: item.title,
+          name: item.name,
+          quantity: item.quantity,
+          price: item.price
+        })),
+        subtotal,
+        shipping,
+        total
+      };
+
+      // Submit order to API
+      const response = await fetch('/api/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(orderData)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to submit order');
+      }
+
+      const result = await response.json();
+      const orderId = result.order.id;
+
+      // Also store in localStorage for demo purposes (keep existing functionality)
+      const order = {
+        orderId,
+        status: 'pending' as const,
+        items: cart.map(item => ({
+          productId: item.productId,
+          title: item.name,
           price: item.price,
           qty: item.quantity,
           image: item.image
@@ -130,7 +160,6 @@ export function CheckoutPage({ onNavigate }: CheckoutPageProps) {
         createdAt: new Date().toISOString()
       };
 
-      // Store order in localStorage for demo purposes
       const existingOrders = JSON.parse(localStorage.getItem('nujuum-orders') || '[]');
       existingOrders.push(order);
       localStorage.setItem('nujuum-orders', JSON.stringify(existingOrders));
@@ -138,10 +167,12 @@ export function CheckoutPage({ onNavigate }: CheckoutPageProps) {
       // Clear cart
       clearCart();
 
-      // Navigate to confirmation
+      // Navigate to confirmation with the actual order ID
       onNavigate(`confirmation/${orderId}`);
     } catch (error) {
       console.error('Order submission failed:', error);
+      // Show error to user
+      setErrors({ submit: 'Failed to submit order. Please try again.' });
     } finally {
       setIsProcessing(false);
     }
@@ -410,6 +441,12 @@ export function CheckoutPage({ onNavigate }: CheckoutPageProps) {
                         <span>${total.toFixed(2)}</span>
                       </div>
                     </div>
+
+                    {errors.submit && (
+                      <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+                        <p className="text-sm text-red-600">{errors.submit}</p>
+                      </div>
+                    )}
 
                     <Button 
                       type="submit"

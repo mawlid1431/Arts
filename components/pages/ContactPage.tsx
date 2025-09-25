@@ -16,6 +16,7 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    phone: '',
     subject: '',
     message: ''
   });
@@ -102,16 +103,28 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
     setIsSubmitting(true);
 
     try {
-      // Simulate form submission
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // In a real app, you would send the form data to your backend here
-      console.log('Form submitted:', formData);
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to submit form');
+      }
+
+      const result = await response.json();
+      console.log('Form submitted successfully:', result);
       
       setIsSubmitted(true);
-      setFormData({ name: '', email: '', subject: '', message: '' });
+      setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
     } catch (error) {
       console.error('Form submission failed:', error);
+      // You could add error state handling here
+      setErrors({ submit: 'Failed to submit form. Please try again.' });
     } finally {
       setIsSubmitting(false);
     }
@@ -284,6 +297,21 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
                         <p className="text-sm text-destructive mt-1">{errors.email}</p>
                       )}
                     </div>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="phone">Phone Number</Label>
+                    <Input
+                      id="phone"
+                      type="tel"
+                      value={formData.phone}
+                      onChange={(e) => handleInputChange('phone', e.target.value)}
+                      placeholder="+1 (555) 123-4567"
+                      className={errors.phone ? 'border-destructive' : ''}
+                    />
+                    {errors.phone && (
+                      <p className="text-sm text-destructive mt-1">{errors.phone}</p>
+                    )}
                   </div>
 
                   <div>

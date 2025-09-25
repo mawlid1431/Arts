@@ -43,6 +43,19 @@ export interface Customer {
   address: string;
 }
 
+export interface CheckoutFormData {
+  name: string;
+  email: string;
+  phone: string;
+  address: {
+    line1: string;
+    line2: string;
+    city: string;
+    postcode: string;
+    country: string;
+  };
+}
+
 export interface Order {
   id: string;
   orderId?: string; // Legacy field for admin interface

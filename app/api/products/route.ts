@@ -5,7 +5,7 @@ import { Product } from '@/types';
 // Temporary mock data for testing - will switch to Supabase once API key is fixed
 const mockProducts = [
   {
-    id: '1',
+    id: '550e8400-e29b-41d4-a716-446655440001',
     name: 'Abstract Expression Canvas',
     description: 'A vibrant abstract painting that brings energy and modern sophistication to any space.',
     price: 299.00,
@@ -18,7 +18,7 @@ const mockProducts = [
     updated_at: new Date().toISOString()
   },
   {
-    id: '2',
+    id: '550e8400-e29b-41d4-a716-446655440002',
     name: 'Minimalist Mountain Landscape',
     description: 'A serene mountain landscape rendered in soft, muted tones.',
     price: 249.00,
@@ -31,7 +31,7 @@ const mockProducts = [
     updated_at: new Date().toISOString()
   },
   {
-    id: '3',
+    id: '550e8400-e29b-41d4-a716-446655440003',
     name: 'Urban Geometric Art',
     description: 'Contemporary geometric artwork inspired by city architecture.',
     price: 199.00,
@@ -44,7 +44,7 @@ const mockProducts = [
     updated_at: new Date().toISOString()
   },
   {
-    id: '4',
+    id: '550e8400-e29b-41d4-a716-446655440004',
     name: 'Botanical Fine Art Study',
     description: 'Delicate botanical illustration featuring hand-painted florals.',
     price: 349.00,
@@ -57,7 +57,7 @@ const mockProducts = [
     updated_at: new Date().toISOString()
   },
   {
-    id: '5',
+    id: '550e8400-e29b-41d4-a716-446655440005',
     name: 'Ocean Waves Canvas',
     description: 'Dramatic seascape capturing the power and beauty of ocean waves.',
     price: 279.00,
@@ -70,7 +70,7 @@ const mockProducts = [
     updated_at: new Date().toISOString()
   },
   {
-    id: '6',
+    id: '550e8400-e29b-41d4-a716-446655440006',
     name: 'Ethereal Dreams',
     description: 'A mystical landscape painting that captures the essence of dreams and imagination.',
     price: 389.00,
@@ -83,7 +83,7 @@ const mockProducts = [
     updated_at: new Date().toISOString()
   },
   {
-    id: '7',
+    id: '550e8400-e29b-41d4-a716-446655440007',
     name: 'Golden Sunset Portrait',
     description: 'An expressive portrait artwork with warm golden tones and emotional depth.',
     price: 459.00,
@@ -96,7 +96,7 @@ const mockProducts = [
     updated_at: new Date().toISOString()
   },
   {
-    id: '8',
+    id: '550e8400-e29b-41d4-a716-446655440008',
     name: 'Modern Floral Study',
     description: 'Contemporary botanical illustration featuring vibrant flowers in modern artistic style.',
     price: 229.00,
