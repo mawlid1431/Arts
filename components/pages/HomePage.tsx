@@ -455,6 +455,432 @@ export function HomePage({ onNavigate }: HomePageProps) {
         </AnimatePresence>
       </section>
 
+      {/* Video Section */}
+      <section className="py-20 relative overflow-hidden bg-gradient-to-br from-background via-accent/5 to-background">
+        {/* Background Elements */}
+        <motion.div
+          className="absolute top-20 left-20 w-32 h-32 bg-gradient-to-br from-primary/10 to-accent/20 rounded-full blur-2xl"
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.3, 0.6, 0.3],
+            x: [0, 20, 0],
+            y: [0, -10, 0]
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+        <motion.div
+          className="absolute bottom-20 right-20 w-40 h-40 bg-gradient-to-br from-accent/20 to-primary/10 rounded-full blur-3xl"
+          animate={{
+            scale: [1, 1.3, 1],
+            opacity: [0.2, 0.5, 0.2],
+            x: [0, -15, 0],
+            y: [0, 10, 0]
+          }}
+          transition={{
+            duration: 10,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 3
+          }}
+        />
+
+        <div className="container mx-auto px-4 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true, margin: "-100px" }}
+            className="text-center mb-12"
+          >
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              whileInView={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary/10 via-accent/10 to-primary/10 backdrop-blur-sm rounded-full mb-6 border border-primary/10"
+            >
+              <Sparkles className="h-5 w-5 text-primary" />
+              <span className="font-medium text-primary">See Art Come to Life</span>
+            </motion.div>
+
+            <motion.h2 
+              className="text-3xl md:text-5xl font-bold mb-6"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              viewport={{ once: true }}
+            >
+              <span className="bg-gradient-to-r from-foreground via-primary to-foreground bg-clip-text text-transparent">
+                Watch Art Transform Spaces
+              </span>
+            </motion.h2>
+
+            <motion.p 
+              className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              viewport={{ once: true }}
+            >
+              Experience how the right artwork can completely transform any space into a gallery of inspiration.
+            </motion.p>
+          </motion.div>
+
+          {/* Video Gallery - Product Card Style */}
+          <motion.div
+            initial={{ opacity: 0, y: 40, scale: 0.95 }}
+            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            viewport={{ once: true }}
+            className="max-w-7xl mx-auto"
+          >
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+              {/* Video 1 - What is Arts */}
+              <motion.div
+                initial={{ opacity: 0, y: 30, scale: 0.95 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+                viewport={{ once: true }}
+                whileHover={{ y: -10, scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="group"
+              >
+                <div className="overflow-hidden cursor-pointer border-none shadow-lg hover:shadow-2xl transition-all duration-500 bg-card/80 backdrop-blur-sm rounded-2xl">
+                  {/* Video Thumbnail - Increased Size */}
+                  <div className="aspect-video overflow-hidden relative bg-gradient-to-br from-gray-900 via-gray-800 to-black min-h-[300px]">
+                    {/* Background Pattern */}
+                    <div 
+                      className="absolute inset-0 bg-cover bg-center opacity-40"
+                      style={{
+                        backgroundImage: `url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450"><defs><linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:%23667eea;stop-opacity:0.4" /><stop offset="50%" style="stop-color:%23764ba2;stop-opacity:0.6" /><stop offset="100%" style="stop-color:%23f093fb;stop-opacity:0.4" /></linearGradient></defs><rect width="800" height="450" fill="url(%23grad1)" /><circle cx="150" cy="100" r="60" fill="rgba(255,255,255,0.08)" /><circle cx="650" cy="300" r="80" fill="rgba(255,255,255,0.05)" /><circle cx="400" cy="200" r="40" fill="rgba(255,255,255,0.1)" /></svg>')`
+                      }}
+                    />
+                    
+                    {/* Play Button Overlay */}
+                    <motion.div
+                      className="absolute inset-0 bg-primary/90 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
+                      whileHover={{ opacity: 1 }}
+                    >
+                      <motion.div
+                        initial={{ scale: 0.8, opacity: 0 }}
+                        whileHover={{ scale: 1, opacity: 1 }}
+                        transition={{ duration: 0.2 }}
+                        className="text-center text-white"
+                      >
+                        <motion.div
+                          className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/30 mx-auto mb-4"
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          <div className="w-0 h-0 border-l-[14px] border-l-white border-y-[8px] border-y-transparent ml-1" />
+                        </motion.div>
+                        <span className="font-medium text-lg">Watch Video</span>
+                      </motion.div>
+                    </motion.div>
+
+                    {/* Video Badge */}
+                    <motion.div
+                      className="absolute top-6 left-6 px-4 py-2 bg-black/70 backdrop-blur-sm rounded-full text-white text-sm font-medium"
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.5 }}
+                    >
+                      Art Education
+                    </motion.div>
+
+                    {/* Duration Badge */}
+                    <motion.div
+                      className="absolute top-6 right-6 px-3 py-2 bg-primary/80 backdrop-blur-sm rounded-full text-white text-sm font-medium"
+                      initial={{ opacity: 0, scale: 0 }}
+                      whileInView={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 0.6 }}
+                    >
+                      ▶ 5:30
+                    </motion.div>
+
+                    {/* Click Handler */}
+                    <div 
+                      className="absolute inset-0 cursor-pointer z-10"
+                      onClick={() => {
+                        const videoContainer = document.querySelector('#video-container-1');
+                        if (videoContainer) {
+                          videoContainer.innerHTML = `
+                            <iframe
+                              src="https://www.youtube.com/embed/nkv1Euf5dc0?autoplay=1&controls=1&modestbranding=1&rel=0&showinfo=0&fs=1"
+                              title="What is Arts and When I Start - Nujuum Arts"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                              allowFullScreen
+                              class="w-full h-full"
+                            />
+                          `;
+                        }
+                      }}
+                    />
+                    
+                    {/* Dynamic Video Container */}
+                    <div id="video-container-1" className="absolute inset-0"></div>
+                  </div>
+
+                  {/* Video Info - Product Card Style */}
+                  <div className="p-8">
+                    {/* Rating Stars */}
+                    <motion.div 
+                      className="flex items-center gap-1 mb-4"
+                      initial={{ opacity: 0 }}
+                      whileInView={{ opacity: 1 }}
+                      transition={{ delay: 0.3 }}
+                    >
+                      {[...Array(5)].map((_, i) => (
+                        <motion.div
+                          key={i}
+                          initial={{ scale: 0, rotate: -180 }}
+                          whileInView={{ scale: 1, rotate: 0 }}
+                          transition={{ 
+                            delay: 0.4 + i * 0.1,
+                            duration: 0.3,
+                            ease: "easeOut"
+                          }}
+                        >
+                          <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                        </motion.div>
+                      ))}
+                      <span className="text-sm text-muted-foreground ml-2">(128 views)</span>
+                    </motion.div>
+
+                    {/* Video Title */}
+                    <motion.h3 
+                      className="text-2xl font-semibold mb-3 group-hover:text-primary transition-colors"
+                      initial={{ opacity: 0, y: 10 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.4 }}
+                    >
+                      What is Arts and When I Start
+                    </motion.h3>
+
+                    {/* Video Description */}
+                    <motion.p 
+                      className="text-muted-foreground mb-6 line-clamp-2 text-lg"
+                      initial={{ opacity: 0 }}
+                      whileInView={{ opacity: 1 }}
+                      transition={{ delay: 0.5 }}
+                    >
+                      Discover the journey into the world of art and learn about the passion that drives artistic creation and expression.
+                    </motion.p>
+
+                    {/* Action Button */}
+                    <motion.div 
+                      className="flex items-center justify-between"
+                      initial={{ opacity: 0, y: 10 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.6 }}
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+                          Featured
+                        </span>
+                      </div>
+                      <Button 
+                        variant="outline" 
+                        size="lg"
+                        className="group-hover:bg-primary group-hover:text-primary-foreground transition-colors px-6 py-3"
+                      >
+                        <Eye className="mr-2 h-5 w-5" />
+                        Watch Now
+                      </Button>
+                    </motion.div>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Video 2 - NujuumArts talks about Modern Somali Art */}
+              <motion.div
+                initial={{ opacity: 0, y: 30, scale: 0.95 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.6, delay: 0.6 }}
+                viewport={{ once: true }}
+                whileHover={{ y: -10, scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="group"
+              >
+                <div className="overflow-hidden cursor-pointer border-none shadow-lg hover:shadow-2xl transition-all duration-500 bg-card/80 backdrop-blur-sm rounded-2xl">
+                  {/* Video Thumbnail - Increased Size */}
+                  <div className="aspect-video overflow-hidden relative bg-gradient-to-br from-purple-900 via-pink-800 to-indigo-900 min-h-[300px]">
+                    {/* Background Pattern */}
+                    <div 
+                      className="absolute inset-0 bg-cover bg-center opacity-40"
+                      style={{
+                        backgroundImage: `url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450"><defs><linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:%23f093fb;stop-opacity:0.4" /><stop offset="50%" style="stop-color:%23f5576c;stop-opacity:0.6" /><stop offset="100%" style="stop-color:%234facfe;stop-opacity:0.4" /></linearGradient></defs><rect width="800" height="450" fill="url(%23grad2)" /><circle cx="200" cy="120" r="70" fill="rgba(255,255,255,0.06)" /><circle cx="600" cy="320" r="90" fill="rgba(255,255,255,0.04)" /><circle cx="350" cy="180" r="50" fill="rgba(255,255,255,0.08)" /></svg>')`
+                      }}
+                    />
+                    
+                    {/* Play Button Overlay */}
+                    <motion.div
+                      className="absolute inset-0 bg-primary/90 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
+                      whileHover={{ opacity: 1 }}
+                    >
+                      <motion.div
+                        initial={{ scale: 0.8, opacity: 0 }}
+                        whileHover={{ scale: 1, opacity: 1 }}
+                        transition={{ duration: 0.2 }}
+                        className="text-center text-white"
+                      >
+                        <motion.div
+                          className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/30 mx-auto mb-4"
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          <div className="w-0 h-0 border-l-[14px] border-l-white border-y-[8px] border-y-transparent ml-1" />
+                        </motion.div>
+                        <span className="font-medium text-lg">Watch Video</span>
+                      </motion.div>
+                    </motion.div>
+
+                    {/* Video Badge */}
+                    <motion.div
+                      className="absolute top-6 left-6 px-4 py-2 bg-black/70 backdrop-blur-sm rounded-full text-white text-sm font-medium"
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.7 }}
+                    >
+                      Cultural Art
+                    </motion.div>
+
+                    {/* Duration Badge */}
+                    <motion.div
+                      className="absolute top-6 right-6 px-3 py-2 bg-accent/80 backdrop-blur-sm rounded-full text-white text-sm font-medium"
+                      initial={{ opacity: 0, scale: 0 }}
+                      whileInView={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 0.8 }}
+                    >
+                      ▶ 9:09
+                    </motion.div>
+
+                    {/* Click Handler */}
+                    <div 
+                      className="absolute inset-0 cursor-pointer z-10"
+                      onClick={() => {
+                        const videoContainer = document.querySelector('#video-container-2');
+                        if (videoContainer) {
+                          videoContainer.innerHTML = `
+                            <iframe
+                              src="https://www.youtube.com/embed/mepKFi2CeMA?autoplay=1&controls=1&modestbranding=1&rel=0&showinfo=0&fs=1&t=549"
+                              title="NujuumArts talks to us about modern Somali art"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                              allowFullScreen
+                              class="w-full h-full"
+                            />
+                          `;
+                        }
+                      }}
+                    />
+                    
+                    {/* Dynamic Video Container */}
+                    <div id="video-container-2" className="absolute inset-0"></div>
+                  </div>
+
+                  {/* Video Info - Product Card Style */}
+                  <div className="p-8">
+                    {/* Rating Stars */}
+                    <motion.div 
+                      className="flex items-center gap-1 mb-4"
+                      initial={{ opacity: 0 }}
+                      whileInView={{ opacity: 1 }}
+                      transition={{ delay: 0.5 }}
+                    >
+                      {[...Array(5)].map((_, i) => (
+                        <motion.div
+                          key={i}
+                          initial={{ scale: 0, rotate: -180 }}
+                          whileInView={{ scale: 1, rotate: 0 }}
+                          transition={{ 
+                            delay: 0.6 + i * 0.1,
+                            duration: 0.3,
+                            ease: "easeOut"
+                          }}
+                        >
+                          <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                        </motion.div>
+                      ))}
+                      <span className="text-sm text-muted-foreground ml-2">(95 views)</span>
+                    </motion.div>
+
+                    {/* Video Title */}
+                    <motion.h3 
+                      className="text-2xl font-semibold mb-3 group-hover:text-primary transition-colors"
+                      initial={{ opacity: 0, y: 10 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.6 }}
+                    >
+                      NujuumArts talks to us about modern Somali art
+                    </motion.h3>
+
+                    {/* Video Description */}
+                    <motion.p 
+                      className="text-muted-foreground mb-6 line-clamp-2 text-lg"
+                      initial={{ opacity: 0 }}
+                      whileInView={{ opacity: 1 }}
+                      transition={{ delay: 0.7 }}
+                    >
+                      An insightful conversation about the evolution and significance of contemporary Somali art and cultural expression.
+                    </motion.p>
+
+                    {/* Action Button */}
+                    <motion.div 
+                      className="flex items-center justify-between"
+                      initial={{ opacity: 0, y: 10 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.8 }}
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="text-2xl font-bold bg-gradient-to-r from-accent to-accent/70 bg-clip-text text-transparent">
+                          Interview
+                        </span>
+                      </div>
+                      <Button 
+                        variant="outline" 
+                        size="lg"
+                        className="group-hover:bg-primary group-hover:text-primary-foreground transition-colors px-6 py-3"
+                      >
+                        <Eye className="mr-2 h-5 w-5" />
+                        Watch Now
+                      </Button>
+                    </motion.div>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          </motion.div>
+
+          {/* Call to Action */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.8 }}
+            viewport={{ once: true }}
+            className="text-center mt-12"
+          >
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Button
+                size="lg"
+                onClick={() => onNavigate('shop')}
+                className="px-8 py-6 rounded-full text-lg group shadow-lg hover:shadow-xl transition-all duration-300"
+              >
+                <Eye className="mr-2 h-5 w-5 group-hover:scale-110 transition-transform" />
+                Start Your Transformation
+                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Enhanced Features Section */}
       <section 
         ref={featuresRef}

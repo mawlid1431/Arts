@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  
+
   // Temporarily disable TypeScript and ESLint checking for deployment
   typescript: {
     ignoreBuildErrors: true,
@@ -9,10 +9,10 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  
+
   // Compress output
   compress: true,
-  
+
   // Production environment variables
   env: {
     SITE_NAME: "Nujuum Arts",
@@ -49,20 +49,22 @@ const nextConfig = {
             value: "camera=(), microphone=(), geolocation=()",
           },
           // CORS headers for API routes in development
-          ...(process.env.NODE_ENV === 'development' ? [
-            {
-              key: 'Access-Control-Allow-Origin',
-              value: '*',
-            },
-            {
-              key: 'Access-Control-Allow-Methods',
-              value: 'GET, POST, PUT, DELETE, OPTIONS',
-            },
-            {
-              key: 'Access-Control-Allow-Headers',
-              value: 'Content-Type, Authorization',
-            },
-          ] : []),
+          ...(process.env.NODE_ENV === "development"
+            ? [
+                {
+                  key: "Access-Control-Allow-Origin",
+                  value: "*",
+                },
+                {
+                  key: "Access-Control-Allow-Methods",
+                  value: "GET, POST, PUT, DELETE, OPTIONS",
+                },
+                {
+                  key: "Access-Control-Allow-Headers",
+                  value: "Content-Type, Authorization",
+                },
+              ]
+            : []),
         ],
       },
     ];
@@ -84,7 +86,7 @@ const nextConfig = {
         pathname: "/**",
       },
     ],
-    formats: ['image/webp', 'image/avif'],
+    formats: ["image/webp", "image/avif"],
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },

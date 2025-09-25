@@ -33,19 +33,19 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
     {
       icon: Phone,
       title: 'Call Us',
-      content: '+1 (555) 123-4567',
-      description: 'Monday - Friday, 9AM - 6PM EST'
+      content: '+252634839219',
+      description: 'Available for inquiries and support'
     },
     {
       icon: MapPin,
-      title: 'Visit Us',
-      content: 'New York, NY',
-      description: 'By appointment only'
+      title: 'Location',
+      content: 'Spain',
+      description: 'Serving customers worldwide'
     },
     {
       icon: Clock,
       title: 'Business Hours',
-      content: 'Mon - Fri: 9AM - 6PM EST',
+      content: 'Mon - Fri: 9AM - 6PM CET',
       description: 'Weekend: By appointment'
     }
   ];
@@ -369,12 +369,19 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
             <CardContent className="p-0">
               <h3 className="text-2xl font-bold mb-4">Visit Our Gallery</h3>
               <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-                While most of our business is online, we do have a showroom in New York where you can 
-                view selected pieces in person. Visits are by appointment only.
+                While most of our business is online, we are based in Spain and serve customers worldwide. 
+                We'd love to hear from you and help you find the perfect artwork for your space.
               </p>
-              <Button variant="outline" size="lg">
-                Schedule a Visit
-              </Button>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button variant="outline" size="lg">
+                  <Mail className="mr-2 h-4 w-4" />
+                  Email Us
+                </Button>
+                <Button variant="outline" size="lg">
+                  <Phone className="mr-2 h-4 w-4" />
+                  Call Us
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </motion.div>
