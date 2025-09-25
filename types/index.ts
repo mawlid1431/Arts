@@ -2,53 +2,72 @@
 
 export interface Product {
   id: string;
-  title: string;
-  slug: string;
+  name: string;
   description: string;
   price: number;
-  images: string[];
-  type: 'Painting' | 'Print' | 'Illustration' | 'Photography' | 'Digital Art';
-  stock: number;
-  createdAt: string;
+  original_price?: number;
+  discount?: number;
+  image: string;
+  category: 'Painting' | 'Print' | 'Illustration' | 'Photography' | 'Digital Art';
+  in_stock: boolean;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface CartItem {
   productId: string;
-  title: string;
+  name: string;
   price: number;
   quantity: number;
   image: string;
 }
 
 export interface OrderItem {
-  productId: string;
-  title: string;
+  id: string;
+  order_id: string;
+  product_id: string;
+  quantity: number;
   price: number;
-  qty: number;
-  image: string;
+  products?: {
+    id: string;
+    name: string;
+    image: string;
+    category?: string;
+  };
 }
 
 export interface Customer {
   name: string;
   email: string;
-  phone: string;
-  address: {
-    line1: string;
-    line2?: string;
-    city: string;
-    postcode: string;
-    country: string;
-  };
+  phone?: string;
+  address: string;
 }
 
 export interface Order {
-  orderId: string;
-  status: 'reviewing' | 'accepted' | 'rejected' | 'fulfilled';
-  items: OrderItem[];
-  customer: Customer;
+  id: string;
+  orderId?: string; // Legacy field for admin interface
+  user_id?: string;
+  customer_name: string;
+  customer_email: string;
+  customer_phone?: string;
+  shipping_address: string;
+  payment_method: string;
+  status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled' | 'reviewing' | 'accepted' | 'fulfilled' | 'rejected';
   subtotal: number;
+  shipping: number;
   total: number;
-  createdAt: string;
+  tracking_number?: string;
+  created_at: string;
+  createdAt?: string; // Legacy field for admin interface
+  updated_at: string;
+  order_items?: OrderItem[];
+  items?: OrderItem[]; // Legacy field for admin interface
+  customer?: { // Legacy nested customer object for admin interface
+    name: string;
+    email: string;
+    phone?: string;
+    address: string;
+  };
 }
 
 export interface User {

@@ -4,7 +4,7 @@ import { ArrowRight, Star, Palette, Shield, Truck, ChevronDown, Eye, Heart, Zap,
 import { Button } from '../ui/button';
 import { Card, CardContent } from '../ui/card';
 import { ImageWithFallback } from '../figma/ImageWithFallback';
-import { mockProducts } from '../../lib/mock-data';
+import { Product } from '../../types';
 
 interface HomePageProps {
   onNavigate: (page: string) => void;
@@ -35,12 +35,44 @@ const scaleIn = {
 export function HomePage({ onNavigate }: HomePageProps) {
   const [showScrollButton, setShowScrollButton] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
   const { scrollY } = useScroll();
   const heroRef = useRef(null);
   const featuresRef = useRef(null);
   const productsRef = useRef(null);
   
-  const featuredProducts = mockProducts.slice(0, 3);
+  const featuredProducts = Array.isArray(products) ? products.slice(0, 3) : [];
+
+  // Fetch products from API
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch('/api/products');
+        if (response.ok) {
+          const data = await response.json();
+          // The API returns {products: [...]} so we need to extract the products array
+          const productsArray = data.products || data;
+          if (Array.isArray(productsArray)) {
+            setProducts(productsArray);
+          } else {
+            console.error('API response does not contain a valid products array:', data);
+            setProducts([]);
+          }
+        } else {
+          console.error('Failed to fetch products:', response.status);
+          setProducts([]);
+        }
+      } catch (error) {
+        console.error('Error fetching products:', error);
+        setProducts([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   // Parallax effects with smoother transitions
   const heroY = useTransform(scrollY, [0, 800], [0, 300]);
@@ -707,122 +739,165 @@ export function HomePage({ onNavigate }: HomePageProps) {
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {featuredProducts.map((product, index) => (
-              <motion.div
-                key={product.id}
-                initial={{ opacity: 0, y: 30, scale: 0.95 }}
-                whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ 
-                  duration: 0.6, 
-                  delay: index * 0.2,
-                  ease: "easeOut"
-                }}
-                viewport={{ once: true }}
-                whileHover={{ y: -10, scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <Card className="overflow-hidden group cursor-pointer border-none shadow-lg hover:shadow-2xl transition-all duration-500 bg-card/80 backdrop-blur-sm" onClick={() => onNavigate(`product/${product.slug}`)}>
-                  <div className="aspect-square overflow-hidden relative">
-                    <motion.img
-                      src={product.images[0]}
-                      alt={product.title}
-                      className="w-full h-full object-cover"
-                      whileHover={{ scale: 1.1 }}
-                      transition={{ duration: 0.6, ease: "easeOut" }}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    
-                    {/* Type Badge */}
-                    <motion.div
-                      className="absolute top-4 left-4 px-3 py-1 bg-black/70 backdrop-blur-sm rounded-full text-white text-xs font-medium"
-                      initial={{ opacity: 0, x: -20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.2 + 0.5 }}
-                    >
-                      {product.type}
-                    </motion.div>
-
-                    {/* Hover Overlay */}
-                    <motion.div
-                      className="absolute inset-0 bg-primary/90 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
-                      whileHover={{ opacity: 1 }}
-                    >
+            {loading ? (
+              // Loading skeleton
+              [...Array(3)].map((_, index) => (
+                <div key={index} className="animate-pulse">
+                  <Card className="overflow-hidden border-none shadow-lg bg-card/80">
+                    <div className="aspect-square bg-muted" />
+                    <CardContent className="p-6">
+                      <div className="h-4 bg-muted rounded mb-2" />
+                      <div className="h-4 bg-muted rounded w-3/4 mb-4" />
+                      <div className="h-8 bg-muted rounded" />
+                    </CardContent>
+                  </Card>
+                </div>
+              ))
+            ) : (
+              featuredProducts.map((product, index) => (
+                <motion.div
+                  key={product.id}
+                  initial={{ opacity: 0, y: 30, scale: 0.95 }}
+                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{ 
+                    duration: 0.6, 
+                    delay: index * 0.2,
+                    ease: "easeOut"
+                  }}
+                  viewport={{ once: true }}
+                  whileHover={{ y: -10, scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <Card className="overflow-hidden group cursor-pointer border-none shadow-lg hover:shadow-2xl transition-all duration-500 bg-card/80 backdrop-blur-sm" onClick={() => onNavigate('shop')}>
+                    <div className="aspect-square overflow-hidden relative">
+                      <motion.img
+                        src={product.image}
+                        alt={product.name}
+                        className="w-full h-full object-cover"
+                        whileHover={{ scale: 1.1 }}
+                        transition={{ duration: 0.6, ease: "easeOut" }}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      
+                      {/* Type Badge */}
                       <motion.div
-                        initial={{ scale: 0.8, opacity: 0 }}
-                        whileHover={{ scale: 1, opacity: 1 }}
-                        transition={{ duration: 0.2 }}
-                        className="text-center text-white"
+                        className="absolute top-4 left-4 px-3 py-1 bg-black/70 backdrop-blur-sm rounded-full text-white text-xs font-medium"
+                        initial={{ opacity: 0, x: -20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.2 + 0.5 }}
                       >
-                        <Eye className="h-8 w-8 mx-auto mb-2" />
-                        <span className="font-medium">View Details</span>
+                        {product.category}
                       </motion.div>
-                    </motion.div>
-                  </div>
 
-                  <CardContent className="p-6">
-                    <motion.div 
-                      className="flex items-center gap-1 mb-3"
-                      initial={{ opacity: 0 }}
-                      whileInView={{ opacity: 1 }}
-                      transition={{ delay: index * 0.2 + 0.3 }}
-                    >
-                      {[...Array(5)].map((_, i) => (
+                      {/* Discount Badge */}
+                      {product.discount && product.discount > 0 && (
                         <motion.div
-                          key={i}
-                          initial={{ scale: 0, rotate: -180 }}
-                          whileInView={{ scale: 1, rotate: 0 }}
-                          transition={{ 
-                            delay: index * 0.2 + 0.4 + i * 0.1,
-                            duration: 0.3,
-                            ease: "easeOut"
-                          }}
+                          className="absolute top-4 right-4 px-2 py-1 bg-red-500 backdrop-blur-sm rounded-full text-white text-xs font-medium"
+                          initial={{ opacity: 0, scale: 0 }}
+                          whileInView={{ opacity: 1, scale: 1 }}
+                          transition={{ delay: index * 0.2 + 0.6 }}
                         >
-                          <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                          -{product.discount}%
                         </motion.div>
-                      ))}
-                      <span className="text-sm text-muted-foreground ml-2">(42 reviews)</span>
-                    </motion.div>
+                      )}
 
-                    <motion.h3 
-                      className="text-xl font-semibold mb-2 group-hover:text-primary transition-colors"
-                      initial={{ opacity: 0, y: 10 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.2 + 0.4 }}
-                    >
-                      {product.title}
-                    </motion.h3>
-
-                    <motion.p 
-                      className="text-muted-foreground mb-4 line-clamp-2"
-                      initial={{ opacity: 0 }}
-                      whileInView={{ opacity: 1 }}
-                      transition={{ delay: index * 0.2 + 0.5 }}
-                    >
-                      {product.description}
-                    </motion.p>
-
-                    <motion.div 
-                      className="flex items-center justify-between"
-                      initial={{ opacity: 0, y: 10 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.2 + 0.6 }}
-                    >
-                      <span className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-                        ${product.price}
-                      </span>
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        className="group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
+                      {/* Hover Overlay - Original Beautiful Style */}
+                      <motion.div
+                        className="absolute inset-0 bg-primary/90 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
+                        whileHover={{ opacity: 1 }}
                       >
-                        <Eye className="mr-1 h-4 w-4" />
-                        View
-                      </Button>
-                    </motion.div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
+                        <motion.div
+                          initial={{ scale: 0.8, opacity: 0 }}
+                          whileHover={{ scale: 1, opacity: 1 }}
+                          transition={{ duration: 0.2 }}
+                          className="text-center text-white"
+                        >
+                          <Eye className="h-8 w-8 mx-auto mb-2" />
+                          <span className="font-medium">View Details</span>
+                        </motion.div>
+                      </motion.div>
+                    </div>
+
+                    <CardContent className="p-6">
+                      {/* Star Rating - Original Beautiful Style */}
+                      <motion.div 
+                        className="flex items-center gap-1 mb-3"
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        transition={{ delay: index * 0.2 + 0.3 }}
+                      >
+                        {[...Array(5)].map((_, i) => (
+                          <motion.div
+                            key={i}
+                            initial={{ scale: 0, rotate: -180 }}
+                            whileInView={{ scale: 1, rotate: 0 }}
+                            transition={{ 
+                              delay: index * 0.2 + 0.4 + i * 0.1,
+                              duration: 0.3,
+                              ease: "easeOut"
+                            }}
+                          >
+                            <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                          </motion.div>
+                        ))}
+                        <span className="text-sm text-muted-foreground ml-2">(42 reviews)</span>
+                      </motion.div>
+
+                      {/* Product Title - Original Beautiful Style */}
+                      <motion.h3 
+                        className="text-xl font-semibold mb-2 group-hover:text-primary transition-colors"
+                        initial={{ opacity: 0, y: 10 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.2 + 0.4 }}
+                      >
+                        {product.name}
+                      </motion.h3>
+
+                      {/* Product Description - Original Beautiful Style */}
+                      <motion.p 
+                        className="text-muted-foreground mb-4 line-clamp-2"
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        transition={{ delay: index * 0.2 + 0.5 }}
+                      >
+                        {product.description}
+                      </motion.p>
+
+                      {/* Price and Button - Original Beautiful Style with New Data */}
+                      <motion.div 
+                        className="flex items-center justify-between"
+                        initial={{ opacity: 0, y: 10 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.2 + 0.6 }}
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+                            ${product.price}
+                          </span>
+                          {product.original_price && product.original_price > product.price && (
+                            <span className="text-sm text-muted-foreground line-through">
+                              ${product.original_price}
+                            </span>
+                          )}
+                        </div>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onNavigate('shop');
+                          }}
+                          className="group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
+                        >
+                          <Eye className="mr-1 h-4 w-4" />
+                          View
+                        </Button>
+                      </motion.div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))
+            )}
           </div>
 
           <motion.div

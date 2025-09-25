@@ -198,8 +198,17 @@ secrets.json
 .local
 .dev
 
-# Backup and temporary files
-*~
-*.swp
-*.swo
-.tmp/
+# Database Backups - SENSITIVE FILES
+*.backup
+*.backup.gz
+db_cluster-*.backup.gz
+
+# PowerShell Scripts - May contain network configs
+*.ps1
+setup-firewall.ps1
+
+# Connection test files
+test-connection.mjs
+
+# Local development scripts
+scripts/populate-database.js

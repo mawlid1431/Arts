@@ -2,7 +2,29 @@
 
 **Make Your Home Amazing with Art**
 
-A modern, responsive e-commerce website for canvas paintings and fine art, built with React, Next.js, TypeScript, and Framer Motion.
+A modern, responsive e-commerce website for canvas paintings and fine art, built with React, Next.js, TypeScript, and Framer M---
+
+## 📞 Contact
+
+### Project Creator
+
+**Mowlid Haibe**  
+_Digital Empowerment Hub Founder & Lead Developer_
+
+- 📧 Email: [malitmohamud@gmail.com](mailto:malitmohamud@gmail.com)
+- 🌐 LinkedIn: [Connect with me](https://www.linkedin.com/in/mowlid-mohamoud-haibe-8b7b6a189/)
+- 🐙 GitHub: [@mawlid1431](https://github.com/mawlid1431)
+
+### Project Information
+
+- **Project Start Date**: September 25, 2025
+- **Current Version**: 1.0.0
+- **Status**: Active Development
+- **Repository**: [Arts](https://github.com/mawlid1431/Arts)
+
+---
+
+## 📄 Supporton.
 
 ![Nujuum Arts Banner](https://images.unsplash.com/photo-1680703511743-d87fba006ec3?w=1200&h=400&fit=crop)
 

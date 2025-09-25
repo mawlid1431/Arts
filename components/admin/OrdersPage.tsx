@@ -32,9 +32,9 @@ export function OrdersPage() {
   }, []);
 
   const filteredOrders = orders.filter(order => {
-    const matchesSearch = order.orderId.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         order.customer.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         order.customer.email.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = order.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         order.customer_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         order.customer_email.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesStatus = statusFilter === 'all' || order.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
@@ -59,47 +59,35 @@ export function OrdersPage() {
     }
   };
 
-  const handleStatusUpdate = async (orderId: string, newStatus: Order['status']) => {
-    setIsUpdating(true);
-    
+    const handleStatusUpdate = async (orderId: string, newStatus: string) => {
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      const updatedOrders = orders.map(order =>
-        order.orderId === orderId ? { ...order, status: newStatus } : order
-      );
-      
-      setOrders(updatedOrders);
-      
-      // Update localStorage
-      const storedOrders = JSON.parse(localStorage.getItem('nujuum-orders') || '[]');
-      const updatedStoredOrders = storedOrders.map((order: Order) =>
-        order.orderId === orderId ? { ...order, status: newStatus } : order
-      );
-      localStorage.setItem('nujuum-orders', JSON.stringify(updatedStoredOrders));
-      
-      // Update selected order if it's the one being updated
-      if (selectedOrder?.orderId === orderId) {
-        setSelectedOrder(prev => prev ? { ...prev, status: newStatus } : null);
+      const response = await fetch(`/api/orders/${orderId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus })
+      });
+
+      if (response.ok) {
+        setOrders(orders.map(order => 
+          (order.orderId || order.id) === orderId ? { ...order, status: newStatus as any } : order
+        ));
+        
+        // Update selected order if it's the one being updated
+        if (selectedOrder && (selectedOrder.orderId || selectedOrder.id) === orderId) {
+          setSelectedOrder({ ...selectedOrder, status: newStatus as any });
+        }
       }
-      
-      // Simulate sending email notification
-      console.log(`Email sent to customer for order ${orderId} - Status: ${newStatus}`);
-      
     } catch (error) {
       console.error('Failed to update order status:', error);
-    } finally {
-      setIsUpdating(false);
     }
   };
 
   const orderStats = {
     total: orders.length,
-    reviewing: orders.filter(o => o.status === 'reviewing').length,
-    accepted: orders.filter(o => o.status === 'accepted').length,
-    fulfilled: orders.filter(o => o.status === 'fulfilled').length,
-    rejected: orders.filter(o => o.status === 'rejected').length
+    reviewing: orders.filter(o => o.status === 'reviewing' || o.status === 'pending').length,
+    accepted: orders.filter(o => o.status === 'accepted' || o.status === 'processing').length,
+    fulfilled: orders.filter(o => o.status === 'fulfilled' || o.status === 'delivered').length,
+    rejected: orders.filter(o => o.status === 'rejected' || o.status === 'cancelled').length
   };
 
   return (
@@ -211,7 +199,7 @@ export function OrdersPage() {
               
               return (
                 <motion.div
-                  key={order.orderId}
+                  key={order.orderId || order.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.05 }}
@@ -221,7 +209,7 @@ export function OrdersPage() {
                       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                         <div className="flex-1">
                           <div className="flex items-center gap-3 mb-2">
-                            <h3 className="font-semibold">{order.orderId}</h3>
+                            <h3 className="font-semibold">{order.orderId || order.id}</h3>
                             <Badge className={getStatusColor(order.status)}>
                               <StatusIcon className="h-3 w-3 mr-1" />
                               {order.status}
@@ -231,14 +219,14 @@ export function OrdersPage() {
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                             <div>
                               <p className="text-muted-foreground">Customer</p>
-                              <p className="font-medium">{order.customer.name}</p>
-                              <p className="text-muted-foreground">{order.customer.email}</p>
+                              <p className="font-medium">{order.customer?.name || order.customer_name}</p>
+                              <p className="text-muted-foreground">{order.customer?.email || order.customer_email}</p>
                             </div>
                             <div>
                               <p className="text-muted-foreground">Order Details</p>
-                              <p>{order.items.length} item{order.items.length !== 1 ? 's' : ''} • ${order.total.toFixed(2)}</p>
+                              <p>{(order.items || order.order_items)?.length || 0} item{((order.items || order.order_items)?.length || 0) !== 1 ? 's' : ''} • ${order.total.toFixed(2)}</p>
                               <p className="text-muted-foreground">
-                                {new Date(order.createdAt).toLocaleDateString()}
+                                {new Date(order.createdAt || order.created_at).toLocaleDateString()}
                               </p>
                             </div>
                           </div>

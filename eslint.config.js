@@ -1,11 +1,17 @@
-const { ESLint } = require('eslint');
+import { FlatCompat } from "@eslint/eslintrc";
+import { dirname } from "path";
+import { fileURLToPath } from "url";
 
-module.exports = [
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const compat = new FlatCompat({
+  baseDirectory: __dirname,
+});
+
+const eslintConfig = [
+  ...compat.extends("next/core-web-vitals", "next/typescript"),
   {
-    extends: [
-      'next/core-web-vitals',
-      'next/typescript'
-    ],
     rules: {
       // React specific rules
       'react/react-in-jsx-scope': 'off',
@@ -25,26 +31,6 @@ module.exports = [
       'prefer-const': 'error',
       'no-var': 'error',
       
-      // Import rules
-      'import/order': [
-        'error',
-        {
-          groups: [
-            'builtin',
-            'external',
-            'internal',
-            'parent',
-            'sibling',
-            'index'
-          ],
-          'newlines-between': 'always',
-          alphabetize: {
-            order: 'asc',
-            caseInsensitive: true
-          }
-        }
-      ],
-      
       // Performance and accessibility
       'jsx-a11y/alt-text': 'error',
       'jsx-a11y/aria-props': 'error',
@@ -60,3 +46,5 @@ module.exports = [
     }
   }
 ];
+
+export default eslintConfig;
