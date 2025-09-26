@@ -37,6 +37,8 @@ export function HomePage({ onNavigate }: HomePageProps) {
   const [activeSection, setActiveSection] = useState('hero');
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [video1Playing, setVideo1Playing] = useState(false);
+  const [video2Playing, setVideo2Playing] = useState(false);
   const { scrollY } = useScroll();
   const heroRef = useRef(null);
   const featuresRef = useRef(null);
@@ -97,6 +99,23 @@ export function HomePage({ onNavigate }: HomePageProps) {
     else if (featuresInView) setActiveSection('features');
     else if (productsInView) setActiveSection('products');
   }, [heroInView, featuresInView, productsInView]);
+
+  // Video control functions
+  const toggleVideo1 = () => {
+    setVideo1Playing(!video1Playing);
+  };
+
+  const toggleVideo2 = () => {
+    setVideo2Playing(!video2Playing);
+  };
+
+  const handleVideoClick = (videoNumber: number) => {
+    if (videoNumber === 1) {
+      toggleVideo1();
+    } else {
+      toggleVideo2();
+    }
+  };
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -561,10 +580,11 @@ export function HomePage({ onNavigate }: HomePageProps) {
                     />
                     
                     {/* Play Button Overlay */}
-                    <motion.div
-                      className="absolute inset-0 bg-primary/90 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
-                      whileHover={{ opacity: 1 }}
-                    >
+                    {!video1Playing && (
+                      <motion.div
+                        className="absolute inset-0 bg-primary/90 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
+                        whileHover={{ opacity: 1 }}
+                      >
                       <motion.div
                         initial={{ scale: 0.8, opacity: 0 }}
                         whileHover={{ scale: 1, opacity: 1 }}
@@ -581,6 +601,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
                         <span className="font-medium text-lg">Watch Video</span>
                       </motion.div>
                     </motion.div>
+                    )}
 
                     {/* Video Badge */}
                     <motion.div
@@ -605,24 +626,55 @@ export function HomePage({ onNavigate }: HomePageProps) {
                     {/* Click Handler */}
                     <div 
                       className="absolute inset-0 cursor-pointer z-10"
-                      onClick={() => {
-                        const videoContainer = document.querySelector('#video-container-1');
-                        if (videoContainer) {
-                          videoContainer.innerHTML = `
-                            <iframe
-                              src="https://www.youtube.com/embed/nkv1Euf5dc0?autoplay=1&controls=1&modestbranding=1&rel=0&showinfo=0&fs=1"
-                              title="What is Arts and When I Start - Nujuum Arts"
-                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                              allowFullScreen
-                              class="w-full h-full"
-                            />
-                          `;
-                        }
-                      }}
+                      onClick={() => handleVideoClick(1)}
                     />
                     
                     {/* Dynamic Video Container */}
-                    <div id="video-container-1" className="absolute inset-0"></div>
+                    <div className="absolute inset-0">
+                      {video1Playing ? (
+                        <div className="relative w-full h-full">
+                          <iframe
+                            src="https://www.youtube.com/embed/nkv1Euf5dc0?autoplay=1&controls=1&modestbranding=1&rel=0&showinfo=0&fs=1&enablejsapi=1"
+                            title="What is Arts and When I Start - Nujuum Arts"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowFullScreen
+                            className="w-full h-full"
+                            onLoad={() => {
+                              // Listen for messages from the iframe to detect when video is paused
+                              const handleMessage = (event: MessageEvent) => {
+                                if (event.origin !== 'https://www.youtube.com') return;
+                                
+                                try {
+                                  const data = JSON.parse(event.data);
+                                  if (data.event === 'video-progress' && data.info?.playerState === 2) {
+                                    // Video is paused (playerState 2)
+                                    // Don't automatically close, let user control
+                                  }
+                                } catch (e) {
+                                  // Ignore parsing errors
+                                }
+                              };
+                              
+                              window.addEventListener('message', handleMessage);
+                              return () => window.removeEventListener('message', handleMessage);
+                            }}
+                          />
+                          
+                          {/* Close Button */}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setVideo1Playing(false);
+                            }}
+                            className="absolute top-4 right-4 w-10 h-10 bg-black/70 hover:bg-black/90 backdrop-blur-sm rounded-full flex items-center justify-center text-white z-20 transition-all duration-200"
+                          >
+                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                            </svg>
+                          </button>
+                        </div>
+                      ) : null}
+                    </div>
                   </div>
 
                   {/* Video Info - Product Card Style */}
@@ -718,10 +770,11 @@ export function HomePage({ onNavigate }: HomePageProps) {
                     />
                     
                     {/* Play Button Overlay */}
-                    <motion.div
-                      className="absolute inset-0 bg-primary/90 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
-                      whileHover={{ opacity: 1 }}
-                    >
+                    {!video2Playing && (
+                      <motion.div
+                        className="absolute inset-0 bg-primary/90 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
+                        whileHover={{ opacity: 1 }}
+                      >
                       <motion.div
                         initial={{ scale: 0.8, opacity: 0 }}
                         whileHover={{ scale: 1, opacity: 1 }}
@@ -738,6 +791,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
                         <span className="font-medium text-lg">Watch Video</span>
                       </motion.div>
                     </motion.div>
+                    )}
 
                     {/* Video Badge */}
                     <motion.div
@@ -762,24 +816,55 @@ export function HomePage({ onNavigate }: HomePageProps) {
                     {/* Click Handler */}
                     <div 
                       className="absolute inset-0 cursor-pointer z-10"
-                      onClick={() => {
-                        const videoContainer = document.querySelector('#video-container-2');
-                        if (videoContainer) {
-                          videoContainer.innerHTML = `
-                            <iframe
-                              src="https://www.youtube.com/embed/mepKFi2CeMA?autoplay=1&controls=1&modestbranding=1&rel=0&showinfo=0&fs=1&t=549"
-                              title="NujuumArts talks to us about modern Somali art"
-                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                              allowFullScreen
-                              class="w-full h-full"
-                            />
-                          `;
-                        }
-                      }}
+                      onClick={() => handleVideoClick(2)}
                     />
                     
                     {/* Dynamic Video Container */}
-                    <div id="video-container-2" className="absolute inset-0"></div>
+                    <div className="absolute inset-0">
+                      {video2Playing ? (
+                        <div className="relative w-full h-full">
+                          <iframe
+                            src="https://www.youtube.com/embed/mepKFi2CeMA?autoplay=1&controls=1&modestbranding=1&rel=0&showinfo=0&fs=1&t=549&enablejsapi=1"
+                            title="NujuumArts talks to us about modern Somali art"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowFullScreen
+                            className="w-full h-full"
+                            onLoad={() => {
+                              // Listen for messages from the iframe to detect when video is paused
+                              const handleMessage = (event: MessageEvent) => {
+                                if (event.origin !== 'https://www.youtube.com') return;
+                                
+                                try {
+                                  const data = JSON.parse(event.data);
+                                  if (data.event === 'video-progress' && data.info?.playerState === 2) {
+                                    // Video is paused (playerState 2)
+                                    // Don't automatically close, let user control
+                                  }
+                                } catch (e) {
+                                  // Ignore parsing errors
+                                }
+                              };
+                              
+                              window.addEventListener('message', handleMessage);
+                              return () => window.removeEventListener('message', handleMessage);
+                            }}
+                          />
+                          
+                          {/* Close Button */}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setVideo2Playing(false);
+                            }}
+                            className="absolute top-4 right-4 w-10 h-10 bg-black/70 hover:bg-black/90 backdrop-blur-sm rounded-full flex items-center justify-center text-white z-20 transition-all duration-200"
+                          >
+                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                            </svg>
+                          </button>
+                        </div>
+                      ) : null}
+                    </div>
                   </div>
 
                   {/* Video Info - Product Card Style */}
