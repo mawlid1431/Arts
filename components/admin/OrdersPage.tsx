@@ -246,7 +246,7 @@ export function OrdersPage() {
                             <>
                               <Button
                                 size="sm"
-                                onClick={() => handleStatusUpdate(order.orderId, 'accepted')}
+                                onClick={() => handleStatusUpdate(order.orderId || order.id, 'accepted')}
                                 disabled={isUpdating}
                               >
                                 <CheckCircle className="h-4 w-4 mr-1" />
@@ -255,7 +255,7 @@ export function OrdersPage() {
                               <Button
                                 variant="destructive"
                                 size="sm"
-                                onClick={() => handleStatusUpdate(order.orderId, 'rejected')}
+                                onClick={() => handleStatusUpdate(order.orderId || order.id, 'rejected')}
                                 disabled={isUpdating}
                               >
                                 <X className="h-4 w-4 mr-1" />
@@ -267,7 +267,7 @@ export function OrdersPage() {
                           {order.status === 'accepted' && (
                             <Button
                               size="sm"
-                              onClick={() => handleStatusUpdate(order.orderId, 'fulfilled')}
+                              onClick={() => handleStatusUpdate(order.orderId || order.id, 'fulfilled')}
                               disabled={isUpdating}
                             >
                               <Package className="h-4 w-4 mr-1" />
@@ -311,21 +311,16 @@ export function OrdersPage() {
                     <div>
                       <h4 className="font-medium mb-2">Contact Details</h4>
                       <div className="space-y-1 text-sm">
-                        <p><strong>Name:</strong> {selectedOrder.customer.name}</p>
-                        <p><strong>Email:</strong> {selectedOrder.customer.email}</p>
-                        <p><strong>Phone:</strong> {selectedOrder.customer.phone}</p>
+                        <p><strong>Name:</strong> {selectedOrder.customer?.name || selectedOrder.customer_name}</p>
+                        <p><strong>Email:</strong> {selectedOrder.customer?.email || selectedOrder.customer_email}</p>
+                        <p><strong>Phone:</strong> {selectedOrder.customer?.phone || selectedOrder.customer_phone}</p>
                       </div>
                     </div>
                     
                     <div>
                       <h4 className="font-medium mb-2">Shipping Address</h4>
                       <div className="space-y-1 text-sm">
-                        <p>{selectedOrder.customer.address.line1}</p>
-                        {selectedOrder.customer.address.line2 && (
-                          <p>{selectedOrder.customer.address.line2}</p>
-                        )}
-                        <p>{selectedOrder.customer.address.city}, {selectedOrder.customer.address.postcode}</p>
-                        <p>{selectedOrder.customer.address.country}</p>
+                        <p>{selectedOrder.shipping_address}</p>
                       </div>
                     </div>
                   </div>
@@ -339,23 +334,23 @@ export function OrdersPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {selectedOrder.items.map((item) => (
-                      <div key={item.productId} className="flex items-center gap-4 p-4 border rounded-lg">
+                    {(selectedOrder.items || selectedOrder.order_items)?.map((item) => (
+                      <div key={item.product_id || item.id} className="flex items-center gap-4 p-4 border rounded-lg">
                         <div className="w-16 h-16 bg-muted rounded-lg overflow-hidden">
                           <img
-                            src={item.image}
-                            alt={item.title}
+                            src={item.products?.image || '/placeholder-image.jpg'}
+                            alt={item.products?.name || 'Product'}
                             className="w-full h-full object-cover"
                           />
                         </div>
                         <div className="flex-1">
-                          <h4 className="font-medium">{item.title}</h4>
+                          <h4 className="font-medium">{item.products?.name || 'Product'}</h4>
                           <p className="text-sm text-muted-foreground">
-                            Quantity: {item.qty} × ${item.price}
+                            Quantity: {item.quantity} × ${item.price}
                           </p>
                         </div>
                         <div className="text-right">
-                          <p className="font-medium">${(item.price * item.qty).toFixed(2)}</p>
+                          <p className="font-medium">${(item.price * item.quantity).toFixed(2)}</p>
                         </div>
                       </div>
                     ))}
@@ -380,7 +375,7 @@ export function OrdersPage() {
                     {selectedOrder.status === 'reviewing' && (
                       <>
                         <Button
-                          onClick={() => handleStatusUpdate(selectedOrder.orderId, 'accepted')}
+                          onClick={() => handleStatusUpdate(selectedOrder.orderId || selectedOrder.id, 'accepted')}
                           disabled={isUpdating}
                         >
                           <CheckCircle className="h-4 w-4 mr-2" />
@@ -388,7 +383,7 @@ export function OrdersPage() {
                         </Button>
                         <Button
                           variant="destructive"
-                          onClick={() => handleStatusUpdate(selectedOrder.orderId, 'rejected')}
+                          onClick={() => handleStatusUpdate(selectedOrder.orderId || selectedOrder.id, 'rejected')}
                           disabled={isUpdating}
                         >
                           <X className="h-4 w-4 mr-2" />
@@ -399,7 +394,7 @@ export function OrdersPage() {
                     
                     {selectedOrder.status === 'accepted' && (
                       <Button
-                        onClick={() => handleStatusUpdate(selectedOrder.orderId, 'fulfilled')}
+                        onClick={() => handleStatusUpdate(selectedOrder.orderId || selectedOrder.id, 'fulfilled')}
                         disabled={isUpdating}
                       >
                         <Package className="h-4 w-4 mr-2" />

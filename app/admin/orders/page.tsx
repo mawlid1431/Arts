@@ -1,5 +1,10 @@
 import OrderManagementPage from '@/components/admin/OrderManagementPage';
+import AdminAuthWrapper from '@/components/admin/AdminAuthWrapper';
 
 export default function AdminOrdersPage() {
-  return <OrderManagementPage />;
+  return (
+    <AdminAuthWrapper>
+      <OrderManagementPage />
+    </AdminAuthWrapper>
+  );
 }

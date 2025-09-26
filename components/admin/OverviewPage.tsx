@@ -1,44 +1,61 @@
+'use client';
+
 import React from 'react';
-import { motion } from 'framer-motion';
-import { Package, ShoppingCart, DollarSign, TrendingUp, Clock, CheckCircle } from 'lucide-react';
+import { Package, ShoppingCart, DollarSign, TrendingUp, Clock, CheckCircle, X, RefreshCw } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Badge } from '../ui/badge';
-import { mockDashboardStats, mockOrders, mockProducts } from '../../lib/mock-data';
+import { useDashboard } from '../../hooks/useDashboard';
 
 export function OverviewPage() {
+  const { dashboardData, loading, error, refreshDashboard } = useDashboard();
+
   const stats = [
     {
       title: 'Total Products',
-      value: mockDashboardStats.totalProducts,
+      value: dashboardData.totalProducts,
       icon: Package,
       color: 'text-blue-600',
       bgColor: 'bg-blue-100 dark:bg-blue-900/20'
     },
     {
       title: 'Pending Orders',
-      value: mockDashboardStats.pendingOrders,
+      value: dashboardData.pendingOrders,
       icon: Clock,
       color: 'text-yellow-600',
       bgColor: 'bg-yellow-100 dark:bg-yellow-900/20'
     },
     {
+      title: 'Accepted Orders',
+      value: dashboardData.acceptedOrders,
+      icon: CheckCircle,
+      color: 'text-blue-600',
+      bgColor: 'bg-blue-100 dark:bg-blue-900/20'
+    },
+    {
       title: 'Fulfilled Orders',
-      value: mockDashboardStats.fulfilledOrders,
+      value: dashboardData.fulfilledOrders,
       icon: CheckCircle,
       color: 'text-green-600',
       bgColor: 'bg-green-100 dark:bg-green-900/20'
     },
     {
+      title: 'Rejected Orders',
+      value: dashboardData.rejectedOrders,
+      icon: X,
+      color: 'text-red-600',
+      bgColor: 'bg-red-100 dark:bg-red-900/20'
+    },
+    {
       title: 'Total Revenue',
-      value: `$${mockDashboardStats.totalRevenue.toLocaleString()}`,
+      value: `$${dashboardData.totalRevenue.toLocaleString()}`,
       icon: DollarSign,
       color: 'text-purple-600',
       bgColor: 'bg-purple-100 dark:bg-purple-900/20'
     }
   ];
 
-  const recentOrders = mockOrders.slice(0, 5);
-  const lowStockProducts = mockProducts.filter(p => p.stock <= 3);
+  const recentOrders = dashboardData.recentOrders || [];
+  const lowStockProducts = dashboardData.lowStockProducts || [];
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -53,38 +70,41 @@ export function OverviewPage() {
   return (
     <div className="space-y-6">
       {/* Welcome */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-      >
-        <h1 className="text-3xl font-bold mb-2">Welcome to Nujuum Arts Admin</h1>
-        <p className="text-muted-foreground">
-          Here's an overview of your art business performance.
-        </p>
-      </motion.div>
+      <div className="mb-8 flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Welcome to Nujuum Arts Admin</h1>
+          <p className="text-gray-600 mt-2">Here's a real-time overview of your art business performance.</p>
+        </div>
+        <button
+          onClick={refreshDashboard}
+          disabled={loading}
+          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+        >
+          <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+          Refresh
+        </button>
+      </div>
+
+      {error && (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+          <p className="text-red-600">{error}</p>
+        </div>
+      )}
 
       {/* Stats Grid */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
-      >
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
         {stats.map((stat, index) => (
-          <motion.div
-            key={stat.title}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 * (index + 1) }}
-          >
-            <Card>
+          <div key={stat.title}>
+            <Card className={loading ? 'opacity-50' : ''}>
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium text-muted-foreground mb-1">
                       {stat.title}
                     </p>
-                    <p className="text-2xl font-bold">{stat.value}</p>
+                    <p className="text-2xl font-bold">
+                      {loading ? '...' : stat.value}
+                    </p>
                   </div>
                   <div className={`p-3 rounded-full ${stat.bgColor}`}>
                     <stat.icon className={`h-6 w-6 ${stat.color}`} />
@@ -92,17 +112,13 @@ export function OverviewPage() {
                 </div>
               </CardContent>
             </Card>
-          </motion.div>
+          </div>
         ))}
-      </motion.div>
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recent Orders */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-        >
+        <div>
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -112,29 +128,34 @@ export function OverviewPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {recentOrders.map((order) => (
-                  <div key={order.orderId} className="flex items-center justify-between p-4 border rounded-lg">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="font-medium">{order.orderId}</span>
-                        <Badge className={getStatusColor(order.status)}>
-                          {order.status}
-                        </Badge>
-                      </div>
-                      <p className="text-sm text-muted-foreground">
-                        {order.customer.name} • {order.items.length} item{order.items.length !== 1 ? 's' : ''}
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        {new Date(order.createdAt).toLocaleDateString()}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-semibold">${order.total.toFixed(2)}</p>
-                    </div>
+                {loading ? (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <RefreshCw className="h-8 w-8 mx-auto mb-4 animate-spin" />
+                    <p>Loading recent orders...</p>
                   </div>
-                ))}
-                
-                {recentOrders.length === 0 && (
+                ) : recentOrders.length > 0 ? (
+                  recentOrders.map((order) => (
+                    <div key={order.id} className="flex items-center justify-between p-4 border rounded-lg">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="font-medium">#{order.id.substring(0, 8)}</span>
+                          <Badge className={getStatusColor(order.status)}>
+                            {order.status}
+                          </Badge>
+                        </div>
+                        <p className="text-sm text-muted-foreground">
+                          {order.customer_name} • {order.order_items?.length || 0} item{(order.order_items?.length || 0) !== 1 ? 's' : ''}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          {new Date(order.created_at).toLocaleDateString()}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-semibold">${order.total.toFixed(2)}</p>
+                      </div>
+                    </div>
+                  ))
+                ) : (
                   <div className="text-center py-8 text-muted-foreground">
                     <ShoppingCart className="h-12 w-12 mx-auto mb-4 opacity-50" />
                     <p>No recent orders</p>
@@ -143,14 +164,10 @@ export function OverviewPage() {
               </div>
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
 
         {/* Low Stock Alert */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-        >
+        <div>
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -160,45 +177,46 @@ export function OverviewPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {lowStockProducts.map((product) => (
-                  <div key={product.id} className="flex items-center gap-4 p-4 border rounded-lg">
-                    <div className="w-12 h-12 bg-muted rounded-lg overflow-hidden">
-                      <img
-                        src={product.images[0]}
-                        alt={product.title}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="font-medium">{product.title}</h4>
-                      <p className="text-sm text-muted-foreground">${product.price}</p>
-                    </div>
-                    <div className="text-right">
-                      <Badge variant={product.stock <= 1 ? 'destructive' : 'secondary'}>
-                        {product.stock} left
-                      </Badge>
-                    </div>
+                {loading ? (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <RefreshCw className="h-8 w-8 mx-auto mb-4 animate-spin" />
+                    <p>Checking inventory...</p>
                   </div>
-                ))}
-                
-                {lowStockProducts.length === 0 && (
+                ) : lowStockProducts.length > 0 ? (
+                  lowStockProducts.map((product) => (
+                    <div key={product.id} className="flex items-center gap-4 p-4 border rounded-lg">
+                      <div className="w-12 h-12 bg-muted rounded-lg overflow-hidden">
+                        <img
+                          src={product.image}
+                          alt={product.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="font-medium">{product.name}</h4>
+                        <p className="text-sm text-muted-foreground">${product.price}</p>
+                      </div>
+                      <div className="text-right">
+                        <Badge variant="destructive">
+                          Out of Stock
+                        </Badge>
+                      </div>
+                    </div>
+                  ))
+                ) : (
                   <div className="text-center py-8 text-muted-foreground">
                     <Package className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                    <p>All products are well stocked</p>
+                    <p>All products are in stock</p>
                   </div>
                 )}
               </div>
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
       </div>
 
       {/* Quick Actions */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5 }}
-      >
+      <div>
         <Card>
           <CardHeader>
             <CardTitle>Quick Actions</CardTitle>
@@ -240,7 +258,9 @@ export function OverviewPage() {
             </div>
           </CardContent>
         </Card>
-      </motion.div>
+      </div>
     </div>
   );
 }
+
+export default OverviewPage;

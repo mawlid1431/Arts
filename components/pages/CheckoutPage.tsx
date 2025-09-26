@@ -398,12 +398,12 @@ export function CheckoutPage({ onNavigate }: CheckoutPageProps) {
                           <div className="w-16 h-16 bg-muted rounded-md overflow-hidden">
                             <img
                               src={item.image}
-                              alt={item.title}
+                              alt={item.name}
                               className="w-full h-full object-cover"
                             />
                           </div>
                           <div className="flex-1">
-                            <h4 className="font-medium text-sm line-clamp-2">{item.title}</h4>
+                            <h4 className="font-medium text-sm line-clamp-2">{item.name}</h4>
                             <p className="text-sm text-muted-foreground">
                               Qty: {item.quantity} × ${item.price}
                             </p>
