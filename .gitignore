@@ -209,6 +209,7 @@ setup-firewall.ps1
 
 # Connection test files
 test-connection.mjs
+test-email.js
 
 # Local development scripts
 scripts/populate-database.js
@@ -222,3 +223,4 @@ admin-test.md
 *-improvements.md
 *-notes.md
 *-test.md
+*-email.js
