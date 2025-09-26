@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/utils/supabase/server';
 import { Product } from '@/types';
 
-// Temporary mock data for testing - will switch to Supabase once API key is fixed
+// Mock data for products (no database needed)
 const mockProducts = [
   {
     id: '550e8400-e29b-41d4-a716-446655440001',
@@ -112,34 +111,9 @@ const mockProducts = [
 
 export async function GET() {
   try {
-    // Try Supabase first (production-ready approach)
-    try {
-      const supabase = await createClient();
-
-      const { data: products, error } = await supabase
-        .from('products')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (!error && products && products.length > 0) {
-        console.log('✅ Successfully loaded products from Supabase:', products.length);
-        return NextResponse.json({ products });
-      }
-
-      // If error or no data, log it and fall back to mock data
-      if (error) {
-        console.warn('⚠️ Supabase error, falling back to mock data:', error.message);
-      } else {
-        console.warn('⚠️ No products found in Supabase, using mock data');
-      }
-    } catch (supabaseError) {
-      console.warn('⚠️ Supabase connection failed, using mock data:', supabaseError);
-    }
-
-    // Fallback to mock data for development/testing
+    // Simply return mock data (no database needed)
     console.log('🎨 Using mock data for products');
     return NextResponse.json({ products: mockProducts });
-
   } catch (error) {
     console.error('❌ Unexpected error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
@@ -148,7 +122,6 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createClient();
     const body = await request.json();
 
     const { 
@@ -170,25 +143,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { data: product, error } = await supabase
-      .from('products')
-      .insert([{
-        name,
-        description,
-        price,
-        original_price: originalPrice || null,
-        discount: discount || 0,
-        image,
-        category,
-        in_stock: inStock !== undefined ? inStock : true,
-      }])
-      .select()
-      .single();
-
-    if (error) {
-      console.error('Error creating product:', error);
-      return NextResponse.json({ error: 'Failed to create product' }, { status: 500 });
-    }
+    // Generate a simple product for response (no database save)
+    const product = {
+      id: `550e8400-e29b-41d4-a716-${Date.now()}`,
+      name,
+      description,
+      price,
+      original_price: originalPrice || null,
+      discount: discount || 0,
+      image,
+      category,
+      in_stock: inStock !== undefined ? inStock : true,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    };
 
     return NextResponse.json({ product }, { status: 201 });
   } catch (error) {
