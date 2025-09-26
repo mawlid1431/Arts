@@ -1,5 +1,35 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { createClient } from '@/utils/supabase/server';
 import { sendContactNotification } from '@/lib/email';
+
+export async function GET(request: NextRequest) {
+  try {
+    const supabase = await createClient();
+    const { searchParams } = new URL(request.url);
+    const status = searchParams.get('status');
+
+    let query = supabase
+      .from('contact_messages')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (status) {
+      query = query.eq('status', status);
+    }
+
+    const { data: messages, error } = await query;
+
+    if (error) {
+      console.error('Error fetching contact messages:', error);
+      return NextResponse.json({ error: 'Failed to fetch messages' }, { status: 500 });
+    }
+
+    return NextResponse.json({ messages: messages || [] });
+  } catch (error) {
+    console.error('Unexpected error:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -21,6 +51,27 @@ export async function POST(request: NextRequest) {
         { error: 'Invalid email format' }, 
         { status: 400 }
       );
+    }
+
+    const supabase = await createClient();
+
+    // Save to database
+    const { data: contactMessage, error: dbError } = await supabase
+      .from('contact_messages')
+      .insert([{
+        name,
+        email,
+        phone,
+        subject,
+        message,
+        status: 'new'
+      }])
+      .select()
+      .single();
+
+    if (dbError) {
+      console.error('Error saving contact message:', dbError);
+      // Continue with email even if database save fails
     }
 
     // Send email notification
@@ -50,7 +101,8 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ 
       success: true, 
-      message: 'Contact form submitted successfully' 
+      message: 'Contact form submitted successfully',
+      id: contactMessage?.id || 'email-only'
     }, { status: 200 });
 
   } catch (error) {

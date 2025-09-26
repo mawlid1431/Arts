@@ -4,7 +4,7 @@
   "description": "Nujuum Arts - Make Your Home Amazing with Art - A complete e-commerce platform for canvas and fine art paintings",
   "private": true,
   "scripts": {
-    "dev": "next dev -H 0.0.0.0 -p 3004",
+    "dev": "next dev -H 172.16.126.9 -p 3004",
     "dev:local": "next dev -p 3004",
     "build": "next build",
     "start": "next start -p $PORT",
