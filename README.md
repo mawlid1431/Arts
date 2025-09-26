@@ -33,6 +33,7 @@ _Digital Empowerment Hub Founder & Lead Developer_
 ## ✨ Features
 
 ### 🛍️ Customer Experience
+
 - **Animated Homepage** with smooth scrolling and art gallery showcase
 - **Product Catalog** with filtering by Canvas/Fine Art paintings
 - **Shopping Cart** with persistent local storage
@@ -42,12 +43,14 @@ _Digital Empowerment Hub Founder & Lead Developer_
 - **Responsive Design** across all devices
 
 ### 🔧 Admin Dashboard
+
 - **Secure Authentication** with demo credentials
 - **Product Management** - Add, edit, delete artworks
 - **Order Processing** - View and manage customer orders
 - **Analytics Overview** - Sales insights and metrics
 
 ### 🎯 Technical Highlights
+
 - **React 18** with TypeScript for type safety
 - **Next.js 15** for optimal performance
 - **Tailwind CSS v4** with custom design system
@@ -60,10 +63,12 @@ _Digital Empowerment Hub Founder & Lead Developer_
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Node.js 18+ 
+
+- Node.js 18+
 - npm 8+ or yarn
 
 ### Installation
+
 ```bash
 # Clone the repository
 git clone https://github.com/nujuumarts/nujuum-arts-ecommerce.git
@@ -81,36 +86,40 @@ npm run dev
 Visit [http://localhost:3000](http://localhost:3000) to see the magic! ✨
 
 ### Admin Access
+
 - **URL**: `/admin`
-- **Email**: `admin@nujuumarts.com`
-- **Password**: `admin123`
+- **Credentials**: Set in your `.env.local` file (see `.env.example`)
+- Use the "Quick Login" button for demo access
 
 ---
 
 ## 📱 Screenshots
 
 ### Homepage
+
 Beautiful animated hero section with art gallery showcase and smooth scroll effects.
 
 ### Shop Page
+
 Clean product grid with filtering options and smooth hover animations.
 
 ### Admin Dashboard
+
 Comprehensive admin panel for managing products and orders.
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Technology | Purpose | Version |
-|------------|---------|---------|
-| **React** | UI Framework | 18.3.1 |
-| **Next.js** | Full-stack Framework | 15.0.3 |
-| **TypeScript** | Type Safety | 5.6.3 |
-| **Tailwind CSS** | Styling | 4.0.0-alpha |
-| **Framer Motion** | Animations | 11.11.17 |
-| **Lucide React** | Icons | Latest |
-| **ShadCN/UI** | Component Library | Latest |
+| Technology        | Purpose              | Version     |
+| ----------------- | -------------------- | ----------- |
+| **React**         | UI Framework         | 18.3.1      |
+| **Next.js**       | Full-stack Framework | 15.0.3      |
+| **TypeScript**    | Type Safety          | 5.6.3       |
+| **Tailwind CSS**  | Styling              | 4.0.0-alpha |
+| **Framer Motion** | Animations           | 11.11.17    |
+| **Lucide React**  | Icons                | Latest      |
+| **ShadCN/UI**     | Component Library    | Latest      |
 
 ---
 
@@ -121,7 +130,7 @@ nujuum-arts-ecommerce/
 ├── 🎨 App.tsx                 # Main app component
 ├── 📁 components/
 │   ├── 📁 admin/             # Admin dashboard
-│   ├── 📁 pages/             # Page components  
+│   ├── 📁 pages/             # Page components
 │   ├── 📁 ui/                # Reusable UI components
 │   └── 📁 figma/             # Design integration
 ├── 📁 contexts/              # React contexts
@@ -137,17 +146,20 @@ nujuum-arts-ecommerce/
 ## 🎨 Design System
 
 ### Color Palette
+
 - **Primary**: `#030213` (Deep Black)
 - **Background**: `#ffffff` (Pure White)
 - **Accent**: `#e9ebef` (Light Gray)
 - **Dark Mode**: Automatically inverted colors
 
 ### Typography
+
 - Clean, modern font stack
 - Responsive sizing
 - Optimized line heights
 
 ### Animations
+
 - Smooth page transitions
 - Hover effects on all interactive elements
 - Scroll-triggered animations
@@ -158,18 +170,21 @@ nujuum-arts-ecommerce/
 ## 🔗 Key Features Deep Dive
 
 ### 🎯 Shopping Experience
+
 - **Product Discovery**: Intuitive filtering and search
 - **Cart Management**: Persistent across sessions
 - **Checkout Flow**: Streamlined customer data collection
 - **Order Confirmation**: Clear status updates
 
 ### 📊 Admin Capabilities
+
 - **Product CRUD**: Full product lifecycle management
 - **Order Management**: Process and track orders
 - **Dashboard Analytics**: Sales insights and metrics
 - **User Authentication**: Secure admin access
 
 ### 🎨 Animation System
+
 - **Page Transitions**: Smooth navigation between routes
 - **Micro-interactions**: Hover states and button feedback
 - **Scroll Animations**: Elements animate into view
@@ -190,6 +205,7 @@ nujuum-arts-ecommerce/
 ## 🔧 Development
 
 ### Available Scripts
+
 ```bash
 npm run dev        # Development server
 npm run build      # Production build
@@ -199,6 +215,7 @@ npm run type-check # TypeScript checking
 ```
 
 ### Environment Variables
+
 ```env
 NEXT_PUBLIC_SITE_NAME=Nujuum Arts
 NEXT_PUBLIC_SITE_URL=https://nujuumarts.com
@@ -237,7 +254,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🙏 Acknowledgments
 
 - **Unsplash** for beautiful artwork images
-- **Lucide** for the icon library  
+- **Lucide** for the icon library
 - **ShadCN** for the component system
 - **Tailwind CSS** for the styling framework
 - **Framer** for the animation library

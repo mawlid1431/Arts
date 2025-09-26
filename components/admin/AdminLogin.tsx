@@ -25,14 +25,13 @@ export function AdminLogin({ onLogin, onBack, isLoading = false, error }: AdminL
   };
 
   const handleDemoLogin = () => {
+    // For demo purposes, just populate the form with placeholders
+    // The actual credentials are safely stored in server environment
     setCredentials({
       email: 'admin@nujuumarts.com',
-      password: 'admin123'
+      password: 'enter-password-here'
     });
-    onLogin({
-      email: 'admin@nujuumarts.com',
-      password: 'admin123'
-    });
+    // Don't auto-submit for security - let user enter real password
   };
 
   return (
@@ -70,7 +69,7 @@ export function AdminLogin({ onLogin, onBack, isLoading = false, error }: AdminL
                     type="email"
                     value={credentials.email}
                     onChange={(e) => setCredentials(prev => ({ ...prev, email: e.target.value }))}
-                    placeholder="admin@nujuumarts.com"
+                    placeholder="Enter admin email"
                     required
                   />
                 </div>
@@ -131,9 +130,7 @@ export function AdminLogin({ onLogin, onBack, isLoading = false, error }: AdminL
                 </Button>
 
                 <div className="text-center text-xs text-muted-foreground">
-                  <p>Demo credentials:</p>
-                  <p>Email: admin@nujuumarts.com</p>
-                  <p>Password: admin123</p>
+                  <p>Use the "Quick Login" button above for demo access</p>
                 </div>
               </form>
             </CardContent>

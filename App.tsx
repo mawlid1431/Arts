@@ -1,29 +1,82 @@
 'use client';
 
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, Suspense } from 'react';
 import { Toaster } from './components/ui/sonner';
 import { CartProvider } from './contexts/CartContext';
+import { LoadingSpinner } from './components/ui/loading-spinner';
+import dynamic from 'next/dynamic';
 
-// Import page components
+// Import only essential components
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { WhatsAppButton } from './components/WhatsAppButton';
-import { HomePage } from './components/pages/HomePage';
-import { ShopPage } from './components/pages/ShopPage';
-import { ProductDetailPage } from './components/pages/ProductDetailPage';
-import { CartPage } from './components/pages/CartPage';
-import { CheckoutPage } from './components/pages/CheckoutPage';
-import { ConfirmationPage } from './components/pages/ConfirmationPage';
-import { AboutPage } from './components/pages/AboutPage';
-import { ContactPage } from './components/pages/ContactPage';
 
-// Import admin components
-import { AdminLogin } from './components/admin/AdminLogin';
-import { AdminLayout } from './components/admin/AdminLayout';
-import { OverviewPage } from './components/admin/OverviewPage';
-import { ProductsPage } from './components/admin/ProductsPage';
-import { OrdersPage } from './components/admin/OrdersPage';
+// Optimized loading component
+const PageLoader = ({ text = 'Loading...' }: { text?: string }) => (
+  <div className="min-h-screen flex items-center justify-center">
+    <LoadingSpinner size="lg" text={text} />
+  </div>
+);
+
+const AdminLoader = ({ text = 'Loading...' }: { text?: string }) => (
+  <div className="p-8 flex items-center justify-center">
+    <LoadingSpinner size="md" text={text} />
+  </div>
+);
+
+// Dynamic imports for better performance - optimized chunks
+const HomePage = dynamic(() => import('./components/pages/HomePage').then(mod => ({ default: mod.HomePage })), {
+  loading: () => <PageLoader text="Loading home page..." />
+});
+
+const ShopPage = dynamic(() => import('./components/pages/ShopPage').then(mod => ({ default: mod.ShopPage })), {
+  loading: () => <PageLoader text="Loading shop..." />
+});
+
+const ProductDetailPage = dynamic(() => import('./components/pages/ProductDetailPage').then(mod => ({ default: mod.ProductDetailPage })), {
+  loading: () => <PageLoader text="Loading product..." />
+});
+
+const CartPage = dynamic(() => import('./components/pages/CartPage').then(mod => ({ default: mod.CartPage })), {
+  loading: () => <PageLoader text="Loading cart..." />
+});
+
+const CheckoutPage = dynamic(() => import('./components/pages/CheckoutPage').then(mod => ({ default: mod.CheckoutPage })), {
+  loading: () => <PageLoader text="Loading checkout..." />
+});
+
+const ConfirmationPage = dynamic(() => import('./components/pages/ConfirmationPage').then(mod => ({ default: mod.ConfirmationPage })), {
+  loading: () => <PageLoader />
+});
+
+const AboutPage = dynamic(() => import('./components/pages/AboutPage').then(mod => ({ default: mod.AboutPage })), {
+  loading: () => <PageLoader />
+});
+
+const ContactPage = dynamic(() => import('./components/pages/ContactPage').then(mod => ({ default: mod.ContactPage })), {
+  loading: () => <PageLoader />
+});
+
+// Dynamic imports for admin components - separate chunks
+const AdminLogin = dynamic(() => import('./components/admin/AdminLogin').then(mod => ({ default: mod.AdminLogin })), {
+  loading: () => <PageLoader text="Loading admin..." />
+});
+
+const AdminLayout = dynamic(() => import('./components/admin/AdminLayout').then(mod => ({ default: mod.AdminLayout })), {
+  loading: () => <PageLoader text="Loading admin..." />
+});
+
+const OverviewPage = dynamic(() => import('./components/admin/OverviewPage').then(mod => ({ default: mod.OverviewPage })), {
+  loading: () => <AdminLoader text="Loading dashboard..." />
+});
+
+const ProductsPage = dynamic(() => import('./components/admin/ProductsPage').then(mod => ({ default: mod.ProductsPage })), {
+  loading: () => <AdminLoader text="Loading products..." />
+});
+
+const OrdersPage = dynamic(() => import('./components/admin/OrdersPage').then(mod => ({ default: mod.OrdersPage })), {
+  loading: () => <AdminLoader text="Loading orders..." />
+});
 
 type PageType = 'home' | 'shop' | 'cart' | 'checkout' | 'about' | 'contact' | 'admin' | 'admin-login';
 
@@ -67,15 +120,22 @@ export default function App() {
     setLoginError('');
 
     try {
-      // Simulate authentication
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Use secure API endpoint for authentication
+      const response = await fetch('/api/admin/auth', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(credentials),
+      });
 
-      // Demo credentials
-      if (credentials.email === 'admin@nujuumarts.com' && credentials.password === 'admin123') {
+      const result = await response.json();
+
+      if (result.success) {
         const user: AdminUser = {
-          email: credentials.email,
-          name: 'Admin User',
-          role: 'admin'
+          email: result.user.email,
+          name: result.user.name,
+          role: result.user.role
         };
         
         setAdminUser(user);
@@ -83,9 +143,10 @@ export default function App() {
         setCurrentPage('admin');
         setAdminView('overview');
       } else {
-        setLoginError('Invalid email or password');
+        setLoginError(result.error || 'Invalid email or password');
       }
     } catch (error) {
+      console.error('Login error:', error);
       setLoginError('Login failed. Please try again.');
     } finally {
       setIsLoggingIn(false);
@@ -107,12 +168,14 @@ export default function App() {
     // Admin routes
     if (currentPage === 'admin-login') {
       return (
-        <AdminLogin
-          onLogin={handleAdminLogin}
-          onBack={() => setCurrentPage('home')}
-          isLoading={isLoggingIn}
-          error={loginError}
-        />
+        <Suspense fallback={<PageLoader text="Loading admin..." />}>
+          <AdminLogin
+            onLogin={handleAdminLogin}
+            onBack={() => setCurrentPage('home')}
+            isLoading={isLoggingIn}
+            error={loginError}
+          />
+        </Suspense>
       );
     }
 
@@ -120,22 +183,36 @@ export default function App() {
       const renderAdminView = () => {
         switch (adminView) {
           case 'products':
-            return <ProductsPage />;
+            return (
+              <Suspense fallback={<AdminLoader text="Loading products..." />}>
+                <ProductsPage />
+              </Suspense>
+            );
           case 'orders':
-            return <OrdersPage />;
+            return (
+              <Suspense fallback={<AdminLoader text="Loading orders..." />}>
+                <OrdersPage />
+              </Suspense>
+            );
           default:
-            return <OverviewPage />;
+            return (
+              <Suspense fallback={<AdminLoader text="Loading dashboard..." />}>
+                <OverviewPage />
+              </Suspense>
+            );
         }
       };
 
       return (
-        <AdminLayout
-          currentView={adminView}
-          onViewChange={setAdminView}
-          onLogout={handleAdminLogout}
-        >
-          {renderAdminView()}
-        </AdminLayout>
+        <Suspense fallback={<PageLoader text="Loading admin..." />}>
+          <AdminLayout
+            currentView={adminView}
+            onViewChange={setAdminView}
+            onLogout={handleAdminLogout}
+          >
+            {renderAdminView()}
+          </AdminLayout>
+        </Suspense>
       );
     }
 
@@ -159,10 +236,12 @@ export default function App() {
     if (productSlug) {
       return (
         <ClientLayout>
-          <ProductDetailPage 
-            productSlug={productSlug}
-            onNavigate={handleNavigation}
-          />
+          <Suspense fallback={<PageLoader text="Loading product..." />}>
+            <ProductDetailPage 
+              productSlug={productSlug}
+              onNavigate={handleNavigation}
+            />
+          </Suspense>
         </ClientLayout>
       );
     }
@@ -170,10 +249,12 @@ export default function App() {
     if (confirmationOrderId) {
       return (
         <ClientLayout>
-          <ConfirmationPage 
-            orderId={confirmationOrderId}
-            onNavigate={handleNavigation}
-          />
+          <Suspense fallback={<PageLoader />}>
+            <ConfirmationPage 
+              orderId={confirmationOrderId}
+              onNavigate={handleNavigation}
+            />
+          </Suspense>
         </ClientLayout>
       );
     }
@@ -183,37 +264,49 @@ export default function App() {
       case 'shop':
         return (
           <ClientLayout>
-            <ShopPage onNavigate={handleNavigation} />
+            <Suspense fallback={<PageLoader text="Loading shop..." />}>
+              <ShopPage onNavigate={handleNavigation} />
+            </Suspense>
           </ClientLayout>
         );
       case 'cart':
         return (
           <ClientLayout>
-            <CartPage onNavigate={handleNavigation} />
+            <Suspense fallback={<PageLoader text="Loading cart..." />}>
+              <CartPage onNavigate={handleNavigation} />
+            </Suspense>
           </ClientLayout>
         );
       case 'checkout':
         return (
           <ClientLayout>
-            <CheckoutPage onNavigate={handleNavigation} />
+            <Suspense fallback={<PageLoader text="Loading checkout..." />}>
+              <CheckoutPage onNavigate={handleNavigation} />
+            </Suspense>
           </ClientLayout>
         );
       case 'about':
         return (
           <ClientLayout>
-            <AboutPage onNavigate={handleNavigation} />
+            <Suspense fallback={<PageLoader />}>
+              <AboutPage onNavigate={handleNavigation} />
+            </Suspense>
           </ClientLayout>
         );
       case 'contact':
         return (
           <ClientLayout>
-            <ContactPage onNavigate={handleNavigation} />
+            <Suspense fallback={<PageLoader />}>
+              <ContactPage onNavigate={handleNavigation} />
+            </Suspense>
           </ClientLayout>
         );
       default:
         return (
           <ClientLayout>
-            <HomePage onNavigate={handleNavigation} />
+            <Suspense fallback={<PageLoader text="Loading home page..." />}>
+              <HomePage onNavigate={handleNavigation} />
+            </Suspense>
           </ClientLayout>
         );
     }
@@ -222,17 +315,9 @@ export default function App() {
   return (
     <CartProvider>
       <div className="app">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentPage + productSlug + confirmationOrderId + adminView}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-          >
-            {renderPage()}
-          </motion.div>
-        </AnimatePresence>
+        <div className="fade-transition">
+          {renderPage()}
+        </div>
         <Toaster />
       </div>
     </CartProvider>

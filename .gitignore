@@ -212,3 +212,13 @@ test-connection.mjs
 
 # Local development scripts
 scripts/populate-database.js
+
+# Documentation and notes - keep private
+SECURITY.md
+video-improvements.md
+admin-test.md
+
+# Any other private documentation
+*-improvements.md
+*-notes.md
+*-test.md

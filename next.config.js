@@ -13,6 +13,9 @@ const nextConfig = {
   // Compress output
   compress: true,
 
+  // Performance optimizations
+  poweredByHeader: false,
+
   // Production environment variables
   env: {
     SITE_NAME: "Nujuum Arts",
@@ -99,6 +102,12 @@ const nextConfig = {
   // Experimental features for better performance
   experimental: {
     scrollRestoration: true,
+    optimizePackageImports: [
+      "framer-motion",
+      "lucide-react",
+      "@radix-ui/react-dialog",
+      "@radix-ui/react-dropdown-menu",
+    ],
   },
 
   // Redirects for better UX

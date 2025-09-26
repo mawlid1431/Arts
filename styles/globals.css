@@ -72,3 +72,24 @@
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-muted-foreground;
 }
+
+/* Performance optimized transitions */
+.fade-transition {
+  opacity: 1;
+  transition: opacity 0.15s ease-in-out;
+}
+
+.fade-transition.loading {
+  opacity: 0.7;
+}
+
+/* Optimize images for faster loading */
+img {
+  content-visibility: auto;
+}
+
+/* Reduce paint complexity */
+.hero-image {
+  will-change: transform;
+  transform: translateZ(0);
+}
