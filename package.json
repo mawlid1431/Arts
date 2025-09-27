@@ -1,6 +1,6 @@
 {
   "name": "nujuum-arts-ecommerce",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Nujuum Arts - Make Your Home Amazing with Art - A complete e-commerce platform for canvas and fine art paintings",
   "private": true,
   "scripts": {
@@ -13,6 +13,8 @@
     "lint:fix": "next lint --fix",
     "type-check": "tsc --noEmit",
     "preview": "next build && next start -p 3003",
+    "analyze": "ANALYZE=true npm run build",
+    "clean": "rm -rf .next out node_modules/.cache",
     "export": "next export",
     "deploy:build": "npm run lint && npm run type-check && npm run build"
   },
