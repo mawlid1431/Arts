@@ -18,8 +18,8 @@ _Digital Empowerment Hub Founder & Lead Developer_
 ### Project Information
 
 - **Project Start Date**: September 25, 2025
-- **Current Version**: 1.0.0
-- **Status**: Active Development
+- **Current Version**: 1.1.0
+- **Status**: Active Development - Database Integrated
 - **Repository**: [Arts](https://github.com/mawlid1431/Arts)
 
 ---
