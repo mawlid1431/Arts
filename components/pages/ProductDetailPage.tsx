@@ -1,32 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Heart, Share2, Star, ShoppingCart, Truck, Shield, RotateCcw } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Card, CardContent } from '../ui/card';
 import { Badge } from '../ui/badge';
 import { Separator } from '../ui/separator';
-import { mockProducts } from '../../lib/mock-data';
 import { useCartContext } from '../../contexts/CartContext';
+import { useProduct, useProducts } from '../../hooks/useProducts';
+import { LoadingSpinner } from '../ui/loading-spinner';
 
 interface ProductDetailPageProps {
-  productSlug: string;
+  productSlug: string; // This is actually the product ID
   onNavigate: (page: string) => void;
 }
 
-export function ProductDetailPage({ productSlug, onNavigate }: ProductDetailPageProps) {
+export function ProductDetailPage({ productSlug: productId, onNavigate }: ProductDetailPageProps) {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [isFavorited, setIsFavorited] = useState(false);
   
   const { addToCart, isInCart, getItemQuantity } = useCartContext();
+  const { product, loading, error } = useProduct(productId);
+  const { products: allProducts } = useProducts();
   
-  const product = mockProducts.find(p => p.slug === productSlug);
-  
-  if (!product) {
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <LoadingSpinner size="lg" text="Loading product..." />
+      </div>
+    );
+  }
+
+  if (error || !product) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold mb-4">Product Not Found</h1>
+          <p className="text-muted-foreground mb-6">
+            {error || "The product you're looking for doesn't exist."}
+          </p>
           <Button onClick={() => onNavigate('shop')}>
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Shop
@@ -37,24 +49,23 @@ export function ProductDetailPage({ productSlug, onNavigate }: ProductDetailPage
   }
 
   const currentQuantityInCart = getItemQuantity(product.id);
-  const maxQuantity = product.stock - currentQuantityInCart;
+  const maxQuantity = product.in_stock ? 10 : 0; // Assuming max 10 if in stock
 
   const handleAddToCart = () => {
-    for (let i = 0; i < quantity; i++) {
-      addToCart({
-        productId: product.id,
-        title: product.title,
-        price: product.price,
-        image: product.images[0]
-      });
-    }
+    addToCart({
+      productId: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image
+    });
     setQuantity(1);
+    // Optional: Show success message or redirect
   };
 
   const handleShare = () => {
     if (navigator.share) {
       navigator.share({
-        title: product.title,
+        title: product.name,
         text: product.description,
         url: window.location.href
       });
@@ -62,6 +73,9 @@ export function ProductDetailPage({ productSlug, onNavigate }: ProductDetailPage
       navigator.clipboard.writeText(window.location.href);
     }
   };
+
+  // Mock images array for gallery (since we only have one image from database)
+  const images = [product.image];
 
   const features = [
     {
@@ -111,16 +125,16 @@ export function ProductDetailPage({ productSlug, onNavigate }: ProductDetailPage
             {/* Main Image */}
             <div className="aspect-square overflow-hidden rounded-lg bg-muted">
               <img
-                src={product.images[selectedImageIndex]}
-                alt={product.title}
+                src={images[selectedImageIndex]}
+                alt={product.name}
                 className="w-full h-full object-cover"
               />
             </div>
 
-            {/* Thumbnail Images */}
-            {product.images.length > 1 && (
+            {/* Thumbnail Images - Only show if multiple images */}
+            {images.length > 1 && (
               <div className="grid grid-cols-4 gap-4">
-                {product.images.map((image, index) => (
+                {images.map((image, index) => (
                   <button
                     key={index}
                     onClick={() => setSelectedImageIndex(index)}
@@ -132,7 +146,7 @@ export function ProductDetailPage({ productSlug, onNavigate }: ProductDetailPage
                   >
                     <img
                       src={image}
-                      alt={`${product.title} ${index + 1}`}
+                      alt={`${product.name} ${index + 1}`}
                       className="w-full h-full object-cover"
                     />
                   </button>
@@ -157,12 +171,12 @@ export function ProductDetailPage({ productSlug, onNavigate }: ProductDetailPage
                 <span className="text-sm text-muted-foreground ml-2">(4.8) • 42 reviews</span>
               </div>
 
-              <h1 className="text-3xl md:text-4xl font-bold mb-2">{product.title}</h1>
+              <h1 className="text-3xl md:text-4xl font-bold mb-2">{product.name}</h1>
               
               <div className="flex items-center gap-3 mb-4">
-                <Badge variant="secondary">{product.type}</Badge>
-                {product.stock <= 3 && (
-                  <Badge variant="destructive">Only {product.stock} left!</Badge>
+                <Badge variant="secondary">{product.category}</Badge>
+                {!product.in_stock && (
+                  <Badge variant="destructive">Out of Stock</Badge>
                 )}
               </div>
 
@@ -262,12 +276,12 @@ export function ProductDetailPage({ productSlug, onNavigate }: ProductDetailPage
                 <h3 className="font-semibold mb-4">Product Details</h3>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Type:</span>
-                    <span>{product.type}</span>
+                    <span className="text-muted-foreground">Category:</span>
+                    <span>{product.category}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Stock:</span>
-                    <span>{product.stock} available</span>
+                    <span>{product.in_stock ? 'Available' : 'Out of Stock'}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">SKU:</span>
@@ -275,7 +289,7 @@ export function ProductDetailPage({ productSlug, onNavigate }: ProductDetailPage
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Created:</span>
-                    <span>{new Date(product.createdAt).toLocaleDateString()}</span>
+                    <span>{new Date(product.created_at).toLocaleDateString()}</span>
                   </div>
                 </div>
               </CardContent>
@@ -292,24 +306,24 @@ export function ProductDetailPage({ productSlug, onNavigate }: ProductDetailPage
         >
           <h2 className="text-2xl font-bold mb-8">You Might Also Like</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {mockProducts
-              .filter(p => p.id !== product.id && p.type === product.type)
+            {allProducts
+              .filter(p => p.id !== product.id && p.category === product.category)
               .slice(0, 4)
               .map((relatedProduct) => (
                 <Card 
                   key={relatedProduct.id} 
                   className="overflow-hidden group cursor-pointer"
-                  onClick={() => onNavigate(`product/${relatedProduct.slug}`)}
+                  onClick={() => onNavigate(`product/${relatedProduct.id}`)}
                 >
                   <div className="aspect-square overflow-hidden">
                     <img
-                      src={relatedProduct.images[0]}
-                      alt={relatedProduct.title}
+                      src={relatedProduct.image}
+                      alt={relatedProduct.name}
                       className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                   </div>
                   <CardContent className="p-4">
-                    <h3 className="font-semibold mb-2 line-clamp-1">{relatedProduct.title}</h3>
+                    <h3 className="font-semibold mb-2 line-clamp-1">{relatedProduct.name}</h3>
                     <p className="text-lg font-bold">${relatedProduct.price}</p>
                   </CardContent>
                 </Card>
