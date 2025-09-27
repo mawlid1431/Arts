@@ -21,7 +21,8 @@
   },
   "functions": {
     "app/api/**": {
-      "maxDuration": 10
+      "maxDuration": 15,
+      "memory": 1024
     }
   },
   "headers": [
