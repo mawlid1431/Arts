@@ -93,3 +93,18 @@ img {
   will-change: transform;
   transform: translateZ(0);
 }
+
+/* Database integration loading states */
+.db-loading {
+  @apply animate-pulse bg-muted;
+}
+
+.db-error {
+  @apply text-destructive bg-destructive/10 border border-destructive/20;
+}
+
+/* Product grid optimizations */
+.product-grid {
+  content-visibility: auto;
+  contain-intrinsic-size: 300px;
+}
