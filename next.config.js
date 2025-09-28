@@ -110,6 +110,11 @@ const nextConfig = {
     ],
   },
 
+  // Skip static optimization for API routes during build
+  generateBuildId: async () => {
+    return 'build-' + Date.now();
+  },
+
   // Redirects for better UX
   async redirects() {
     return [
