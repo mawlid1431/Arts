@@ -31,8 +31,7 @@
       "@/hooks/*": ["./hooks/*"],
       "@/contexts/*": ["./contexts/*"],
       "@/types/*": ["./types/*"],
-      "@/styles/*": ["./styles/*"],
-      "@/utils/*": ["./utils/*"]
+      "@/styles/*": ["./styles/*"]
     },
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true

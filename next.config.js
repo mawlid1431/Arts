@@ -107,16 +107,7 @@ const nextConfig = {
       "lucide-react",
       "@radix-ui/react-dialog",
       "@radix-ui/react-dropdown-menu",
-      "@supabase/supabase-js",
     ],
-    turbo: {
-      rules: {
-        "*.svg": {
-          loaders: ["@svgr/webpack"],
-          as: "*.js",
-        },
-      },
-    },
   },
 
   // Redirects for better UX
