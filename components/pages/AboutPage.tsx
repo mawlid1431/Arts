@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Heart, Palette, Users, Award, Globe, Truck } from 'lucide-react';
 import { Card, CardContent } from '../ui/card';
 import { Button } from '../ui/button';
+import { ImageWithFallback } from '../figma/ImageWithFallback';
 
 interface AboutPageProps {
   onNavigate: (page: string) => void;
@@ -140,10 +141,11 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
                 </p>
               </div>
             </div>
-            <div className="aspect-square bg-gradient-to-br from-primary/20 to-primary/5 rounded-2xl overflow-hidden">
-              <img 
+            <div className="relative aspect-square bg-gradient-to-br from-primary/20 to-primary/5 rounded-2xl overflow-hidden">
+              <ImageWithFallback
                 src="/about_img.jpg" 
                 alt="Vibrant colorful portrait artwork showcasing geometric patterns and artistic expression" 
+                fill
                 className="w-full h-full object-cover"
               />
             </div>

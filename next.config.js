@@ -92,6 +92,8 @@ const nextConfig = {
     formats: ["image/webp", "image/avif"],
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    // Add unoptimized for better compatibility on some hosting platforms
+    unoptimized: process.env.NODE_ENV === 'production',
   },
 
   // Production optimizations
